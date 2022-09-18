@@ -1,13 +1,45 @@
 ﻿#include <iostream>
+#include <string>
+#include <windows.h>
+#include <winuser.h>
 
 using namespace std;
+
+
+struct Pipe {
+	float len = 0;
+	float diameter = 0;
+	bool in_repairing = false;
+};
+
+
+struct Compr_station {
+	string name = "";
+	int num_workshops = 0;
+	int num_run_workshops = 0;
+	float efficiency = 0;
+};
+
+
+bool is_empt(Pipe Pp, Compr_station Cs) {
+	return ((Pp.len == 0) &&
+		(Pp.diameter == 0) &&
+		(Pp.in_repairing == false) &&
+		(Cs.name == "") &&
+		(Cs.num_workshops == 0) &&
+		(Cs.num_run_workshops == 0) &&
+		(Cs.efficiency == 0));
+};
+
 
 
 int menu_choice() {
 	int choice = 0;
 	while (true) {
 		cin >> choice;
-		if ((choice >= 0) && (choice <= 7)) return choice;
+		if ((choice >= 0) && (choice <= 7) && (cin.good())) return choice;
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 		cout << "Please, enter the correct number" << endl;
 	};
 }
@@ -15,10 +47,12 @@ int menu_choice() {
 
 float pipe_len_input() {
 	float len = 0;
+	cout << "Input the length of Pipe: ";
 	while (true) {
-		cout << "Input the length of Pipe: ";
 		cin >> len;
-		if (len > 0) return len;
+		if ((len > 0) && (cin.good())) return len;
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 		cout << "Please, input correct length of pipe: ";
 	};
 }
@@ -26,26 +60,31 @@ float pipe_len_input() {
 
 float pipe_diam_input() {
 	float diam = 0;
+	cout << "Input the diameter of Pipe: ";
 	while (true) {
-		cout << "Input the diameter of Pipe: ";
 		cin >> diam;
-		if (diam > 0) return diam;;
+		if ((diam > 0) && cin.good()) return diam;
 		cout << "Please, input correct diameter of pipe: ";
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 	};
 }
 
 
 bool pipe_in_rep_input() {
 	int in_repearing = false;
+	cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
 	while (true) {
-		cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
 		cin >> in_repearing;
 
-		if (in_repearing == 1) return true;
+		if ((in_repearing == 1) && (cin.good())) return true;
 
-		else if (in_repearing == 2) return false;
+		else if ((in_repearing == 2) && (cin.good())) return false;
 
 		else cout << "Input the correct number";
+
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 	};
 }
 
@@ -53,83 +92,136 @@ bool pipe_in_rep_input() {
 string cs_name_input() {
 	string name = "";
 	cout << "Input the Name of CS: ";
-	cin >> name;
+	cin.ignore();
+	getline(cin, name);
 	return name;
 };
 
 
 int cs_num_worksh_input() {
 	int num_workshops = 0;
+	cout << "Input number of workshops: ";
 	while (true) {
-		cout << "Input number of workshops: ";
 		cin >> num_workshops;
-		if (num_workshops > 0) return num_workshops;
+		if ((num_workshops > 0) && cin.good()) return num_workshops;
 		cout << "Please, input correct num of workshops: ";
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 	};
 }
 
 
 int cs_num_run_worksh_input(int num_workshops) {
 	int num_run_workshops = 0;
+	cout << "Input number of running workshops: ";
 	while (true) {
-		cout << "Input number of running workshops: ";
 		cin >> num_run_workshops;
-		if ((num_run_workshops > 0) && (num_run_workshops <= num_workshops)) return num_run_workshops;
+		if ((num_run_workshops > 0) && (num_run_workshops <= num_workshops) && cin.good()) return num_run_workshops;
 		cout << "Please, input correct num of running workshops: ";
+		cin.clear();
+		cin.ignore(INT_MAX, '\n');
 	};
 }
 
 
 float cs_efficiency_input() {
 	float efficiency = 0;
-	cout << "Input the efficiency of CS";
-	cin >> efficiency;
-	return efficiency;
+	cout << "Input the efficiency of CS: ";
+	while (true) {
+		cin >> efficiency;
+		if (cin.good()) return efficiency;
+		else {
+			cout << "Please, input the correct efficiency: ";
+			cin.clear();
+			cin.ignore(INT_MAX, '\n');
+		}
+	}
 };
 
 
-struct Pipe {
-	float len;
-	float diameter;
-	bool in_repairing;
-};
+void view_obj(Pipe Pp, Compr_station Cs) {
+	cout << "Ccompressor station" << endl;
+	cout << "The name of compressor station: " << Cs.name << endl;
+	cout << "Number of workshops on conpressor station: " << Cs.num_workshops << endl;
+	cout << "Number of running workshops on conpressor station: " << Cs.num_run_workshops << endl;
+	cout << "Efficiency conpressor station: " << Cs.efficiency << endl << endl;
 
-
-struct Compr_station {
-	string name;
-	int num_workshops;
-	int num_run_workshops;
-	float efficiency;
+	cout << "Pipe" << endl;
+	cout << "Length of pipe: " << Pp.len << endl;
+	cout << "Diameter of pipe: " << Pp.diameter << endl;
+	string in_rep = Pp.in_repairing ? "Pipe is working" : "Pipe in repearing";
+	cout << in_rep << endl << endl;
 };
 
 
 int main()
 {
-	Pipe Pp = {0, 0, 0};
-	Compr_station Cs = {"0", 0, 0, 0};
+	Pipe Pp;
+	Compr_station Cs;
 
 	while (true) {
+		system("cls");
 		cout << "1.Add a pipe 2.Add a CS 3.View all objects 4.Edit pipe 5.Edit CS 6.save 7.Load 0.Exit" << endl;
 		int choice = menu_choice();
 
-		if (choice == 0) break;
+		if (choice == 0) {
+			system("cls");
+			cout << "Goodbye";
+			break;
+		};
 
 		if (choice == 1) {
+			system("cls");
 			Pp.len = pipe_len_input();
 			Pp.diameter = pipe_diam_input();
 			Pp.in_repairing = pipe_in_rep_input();
 		};
 
 		if (choice == 2) {
+			system("cls");
 			Cs.name = cs_name_input();
 			Cs.num_workshops = cs_num_worksh_input();
 			Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
 			Cs.efficiency = cs_efficiency_input();
 		};
 
+		if (choice == 3) {
+			system("cls");
+			if (!is_empt(Pp, Cs)) view_obj(Pp, Cs);
+			else cout << "There is no objects now" << endl;
+			system("pause");
+		};
+
+
+		if (choice == 4) {
+			if (!is_empt(Pp, Cs)) {
+				system("cls");
+				Pp.len = pipe_len_input();
+				Pp.diameter = pipe_diam_input();
+				Pp.in_repairing = pipe_in_rep_input();
+			}
+			else {
+				cout << "There is no pipe now";
+				system("pause");
+			};
+	    }
+
+
+		if (choice == 5) {
+			if (!is_empt(Pp, Cs)) {
+				system("cls");
+				Cs.name = cs_name_input();
+				Cs.num_workshops = cs_num_worksh_input();
+				Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
+				Cs.efficiency = cs_efficiency_input();
+			}
+			else {
+				cout << "There is no compressor station now";
+				system("pause");
+			};
+		}
+
 	};
 
-	cout << Pp.len << Pp.diameter << Pp.in_repairing << endl;
-	cout << Cs.name << Cs.num_workshops << Cs.num_run_workshops;
 	return 0;
 }
