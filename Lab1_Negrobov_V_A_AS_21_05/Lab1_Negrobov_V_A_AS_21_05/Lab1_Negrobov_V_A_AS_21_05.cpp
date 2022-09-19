@@ -1,7 +1,6 @@
 ﻿#include <iostream>
 #include <string>
-#include <windows.h>
-//#include <winuser.h>
+#include <limits>
 
 using namespace std;
 
@@ -23,47 +22,31 @@ struct Compr_station {
 };
 
 
-int menu_choice() {
-	int choice = 0;
+float get_float_value(float least=0) {
+	float val = 0;
 	while (true) {
-		cin >> choice;
-		if ((choice >= 0) && (choice <= 7) && (cin.good())) return choice;
+		cin >> val;
+		if ((val > least) && (cin.good())) return val;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
-		cout << "Please, enter the correct number" << endl;
-	};
+		cout << "Please, input correct value: ";
+	}
 }
 
-
-float pipe_len_input() {
-	float len = 0;
-	cout << "Input the length of Pipe: ";
+int get_int_value(float least=0, float great=std::numeric_limits<float>::max()) {
+	int val = 0;
 	while (true) {
-		cin >> len;
-		if ((len > 0) && (cin.good())) return len;
+		cin >> val;
+		if ((val > least) && cin.good() && (val < great)) return val;
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
-		cout << "Please, input correct length of pipe: ";
-	};
-}
-
-
-float pipe_diam_input() {
-	float diam = 0;
-	cout << "Input the diameter of Pipe: ";
-	while (true) {
-		cin >> diam;
-		if ((diam > 0) && cin.good()) return diam;
-		cout << "Please, input correct diameter of pipe: ";
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	};
+		cout << "Please, input correct value: ";
+	}
 }
 
 
 bool pipe_in_rep_input() {
 	int in_repearing = false;
-	cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
 	while (true) {
 		cin >> in_repearing;
 
@@ -71,62 +54,12 @@ bool pipe_in_rep_input() {
 
 		else if ((in_repearing == 2) && (cin.good())) return false;
 
-		else cout << "Input the correct number";
+		else cout << "Input the correct number: ";
 
 		cin.clear();
 		cin.ignore(INT_MAX, '\n');
-	};
-}
-
-
-string cs_name_input() {
-	string name = "";
-	cout << "Input the Name of CS: ";
-	cin.ignore();
-	getline(cin, name);
-	return name;
-};
-
-
-int cs_num_worksh_input() {
-	int num_workshops = 0;
-	cout << "Input number of workshops: ";
-	while (true) {
-		cin >> num_workshops;
-		if ((num_workshops > 0) && cin.good()) return num_workshops;
-		cout << "Please, input correct num of workshops: ";
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	};
-}
-
-
-int cs_num_run_worksh_input(int num_workshops) {
-	int num_run_workshops = 0;
-	cout << "Input number of running workshops: ";
-	while (true) {
-		cin >> num_run_workshops;
-		if ((num_run_workshops > 0) && (num_run_workshops <= num_workshops) && cin.good()) return num_run_workshops;
-		cout << "Please, input correct num of running workshops: ";
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-	};
-}
-
-
-float cs_efficiency_input() {
-	float efficiency = 0;
-	cout << "Input the efficiency of CS: ";
-	while (true) {
-		cin >> efficiency;
-		if (cin.good()) return efficiency;
-		else {
-			cout << "Please, input the correct efficiency: ";
-			cin.clear();
-			cin.ignore(INT_MAX, '\n');
-		}
 	}
-};
+}
 
 
 void view_obj(Pipe Pp, Compr_station Cs) {
@@ -139,7 +72,7 @@ void view_obj(Pipe Pp, Compr_station Cs) {
 	}
 	else {
 		cout << "There is no compressor station" << endl;
-	};
+	}
 
 	if (Pp.exist == true) {
 		cout << "Pipe" << endl;
@@ -150,7 +83,7 @@ void view_obj(Pipe Pp, Compr_station Cs) {
 	}
 	else {
 		cout << "There is no pipe" << endl;
-	};
+	}
 };
 
 
@@ -162,7 +95,7 @@ int main()
 	while (true) {
 		system("cls");
 		cout << "1.Add a pipe 2.Add a CS 3.View all objects 4.Edit pipe 5.Edit CS 6.save 7.Load 0.Exit" << endl;
-		int choice = menu_choice();
+		int choice = get_int_value(-1, 8);
 
 		if (choice == 0) {
 			system("cls");
@@ -171,20 +104,40 @@ int main()
 		}
 
 		if (choice == 1) {
-			system("cls");
-			Pp.len = pipe_len_input();
-			Pp.diameter = pipe_diam_input();
-			Pp.in_repairing = pipe_in_rep_input();
-			Pp.exist = true;
+			if (Pp.exist == true) {
+				cout << "Pipe exist" << endl;
+				system("pause");
+			}
+			else {
+				system("cls");
+				cout << "Input the length of Pipe: ";
+				Pp.len = get_float_value();
+				cout << "Input the diameter of Pipe: ";
+				Pp.diameter = get_float_value();
+				cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
+				Pp.in_repairing = pipe_in_rep_input();
+				Pp.exist = true;
+			}
 		}
 
 		if (choice == 2) {
-			system("cls");
-			Cs.name = cs_name_input();
-			Cs.num_workshops = cs_num_worksh_input();
-			Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
-			Cs.efficiency = cs_efficiency_input();
-			Cs.exist = true;
+			if (Cs.exist == true) {
+				cout << "CS exist" << endl;
+				system("pause");
+			}
+			else {
+				system("cls");
+				cout << "Input the Name of CS: ";
+				cin.ignore();
+				getline(cin, Cs.name);
+				cout << "Input number of workshops: ";
+				Cs.num_workshops = get_int_value();
+				cout << "Input number of running workshops: ";
+				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
+				cout << "Input the efficiency of CS: ";
+				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
+				Cs.exist = true;
+			}
 		}
 
 		if (choice == 3) {
@@ -194,28 +147,38 @@ int main()
 
 		if (choice == 4) {
 			if (Pp.exist == false) {
-				cout << "There is no pipe to edit";
+				cout << "There is no pipe to edit" << endl;
 				system("pause");
 			}
 			else {
 				system("cls");
-				Pp.len = pipe_len_input();
-				Pp.diameter = pipe_diam_input();
+				cout << "Input the length of Pipe: ";
+				Pp.len = get_float_value();
+				cout << "Input the diameter of Pipe: ";
+				Pp.diameter = get_float_value();
+				cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
 				Pp.in_repairing = pipe_in_rep_input();
+				Pp.exist = true;
 			}
 		}
 
 		if (choice == 5) {
 			if (Cs.exist == false) {
-				cout << "There is no CS now";
+				cout << "There is no CS now" << endl;
 				system("pause");
 			}
 			else {
 				system("cls");
-				Cs.name = cs_name_input();
-				Cs.num_workshops = cs_num_worksh_input();
-				Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
-				Cs.efficiency = cs_efficiency_input();
+				cout << "Input the Name of CS: ";
+				cin.ignore();
+				getline(cin, Cs.name);
+				cout << "Input number of workshops: ";
+				Cs.num_workshops = get_int_value();
+				cout << "Input number of running workshops: ";
+				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
+				cout << "Input the efficiency of CS: ";
+				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
+				Cs.exist = true;
 			}
 		}
 
