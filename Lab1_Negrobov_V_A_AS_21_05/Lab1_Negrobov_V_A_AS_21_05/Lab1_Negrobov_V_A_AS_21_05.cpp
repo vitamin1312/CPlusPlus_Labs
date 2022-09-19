@@ -1,36 +1,26 @@
 ﻿#include <iostream>
 #include <string>
 #include <windows.h>
-#include <winuser.h>
+//#include <winuser.h>
 
 using namespace std;
 
 
 struct Pipe {
-	float len = 0;
-	float diameter = 0;
-	bool in_repairing = false;
+	float len;
+	float diameter;
+	bool in_repairing;
+	bool exist = false;
 };
 
 
 struct Compr_station {
-	string name = "";
-	int num_workshops = 0;
-	int num_run_workshops = 0;
-	float efficiency = 0;
+	string name;
+	int num_workshops;
+	int num_run_workshops;
+	float efficiency;
+	bool exist = false;
 };
-
-
-bool is_empt(Pipe Pp, Compr_station Cs) {
-	return ((Pp.len == 0) &&
-		(Pp.diameter == 0) &&
-		(Pp.in_repairing == false) &&
-		(Cs.name == "") &&
-		(Cs.num_workshops == 0) &&
-		(Cs.num_run_workshops == 0) &&
-		(Cs.efficiency == 0));
-};
-
 
 
 int menu_choice() {
@@ -77,7 +67,7 @@ bool pipe_in_rep_input() {
 	while (true) {
 		cin >> in_repearing;
 
-		if ((in_repearing == 1) && (cin.good())) return true;
+		if ((in_repearing == 1) && cin.good()) return true;
 
 		else if ((in_repearing == 2) && (cin.good())) return false;
 
@@ -140,17 +130,27 @@ float cs_efficiency_input() {
 
 
 void view_obj(Pipe Pp, Compr_station Cs) {
-	cout << "Ccompressor station" << endl;
-	cout << "The name of compressor station: " << Cs.name << endl;
-	cout << "Number of workshops on conpressor station: " << Cs.num_workshops << endl;
-	cout << "Number of running workshops on conpressor station: " << Cs.num_run_workshops << endl;
-	cout << "Efficiency conpressor station: " << Cs.efficiency << endl << endl;
+	if (Cs.exist == true) {
+		cout << "Ccompressor station" << endl;
+		cout << "The name of compressor station: " << Cs.name << endl;
+		cout << "Number of workshops on conpressor station: " << Cs.num_workshops << endl;
+		cout << "Number of running workshops on conpressor station: " << Cs.num_run_workshops << endl;
+		cout << "Efficiency conpressor station: " << Cs.efficiency << endl << endl;
+	}
+	else {
+		cout << "There is no compressor station" << endl;
+	};
 
-	cout << "Pipe" << endl;
-	cout << "Length of pipe: " << Pp.len << endl;
-	cout << "Diameter of pipe: " << Pp.diameter << endl;
-	string in_rep = Pp.in_repairing ? "Pipe is working" : "Pipe in repearing";
-	cout << in_rep << endl << endl;
+	if (Pp.exist == true) {
+		cout << "Pipe" << endl;
+		cout << "Length of pipe: " << Pp.len << endl;
+		cout << "Diameter of pipe: " << Pp.diameter << endl;
+		string in_rep = Pp.in_repairing ? "Pipe is working" : "Pipe in repearing";
+		cout << in_rep << endl << endl;
+	}
+	else {
+		cout << "There is no pipe" << endl;
+	};
 };
 
 
@@ -168,14 +168,15 @@ int main()
 			system("cls");
 			cout << "Goodbye";
 			break;
-		};
+		}
 
 		if (choice == 1) {
 			system("cls");
 			Pp.len = pipe_len_input();
 			Pp.diameter = pipe_diam_input();
 			Pp.in_repairing = pipe_in_rep_input();
-		};
+			Pp.exist = true;
+		}
 
 		if (choice == 2) {
 			system("cls");
@@ -183,45 +184,43 @@ int main()
 			Cs.num_workshops = cs_num_worksh_input();
 			Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
 			Cs.efficiency = cs_efficiency_input();
-		};
+			Cs.exist = true;
+		}
 
 		if (choice == 3) {
-			system("cls");
-			if (!is_empt(Pp, Cs)) view_obj(Pp, Cs);
-			else cout << "There is no objects now" << endl;
+			view_obj(Pp, Cs);
 			system("pause");
-		};
-
+		}
 
 		if (choice == 4) {
-			if (!is_empt(Pp, Cs)) {
+			if (Pp.exist == false) {
+				cout << "There is no pipe to edit";
+				system("pause");
+			}
+			else {
 				system("cls");
 				Pp.len = pipe_len_input();
 				Pp.diameter = pipe_diam_input();
 				Pp.in_repairing = pipe_in_rep_input();
 			}
-			else {
-				cout << "There is no pipe now";
-				system("pause");
-			};
-	    }
-
+		}
 
 		if (choice == 5) {
-			if (!is_empt(Pp, Cs)) {
+			if (Cs.exist == false) {
+				cout << "There is no CS now";
+				system("pause");
+			}
+			else {
 				system("cls");
 				Cs.name = cs_name_input();
 				Cs.num_workshops = cs_num_worksh_input();
 				Cs.num_run_workshops = cs_num_run_worksh_input(Cs.num_workshops);
 				Cs.efficiency = cs_efficiency_input();
 			}
-			else {
-				cout << "There is no compressor station now";
-				system("pause");
-			};
 		}
 
-	};
+
+	}
 
 	return 0;
 }
