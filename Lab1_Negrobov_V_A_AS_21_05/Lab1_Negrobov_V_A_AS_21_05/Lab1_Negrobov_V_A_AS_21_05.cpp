@@ -1,23 +1,24 @@
 ﻿#include <iostream>
 #include <string>
 #include <limits>
+#include <fstream>
 
 using namespace std;
 
 
 struct Pipe {
-	float len;
-	float diameter;
-	bool in_repairing;
+	float len = 0;
+	float diameter = 0;
+	bool in_repairing = 0;
 	bool exist = false;
 };
 
 
 struct Compr_station {
-	string name;
-	int num_workshops;
-	int num_run_workshops;
-	float efficiency;
+	string name = " ";
+	int num_workshops = 0;
+	int num_run_workshops = 0;
+	float efficiency = 0;
 	bool exist = false;
 };
 
@@ -182,8 +183,40 @@ int main()
 			}
 		}
 
+		if (choice == 6) {
+			ofstream file("data.txt");
+			file << Pp.len << endl << Pp.diameter << endl << Pp.in_repairing << endl << Pp.exist << endl
+			 << Cs.name << endl << Cs.num_workshops << endl << Cs.num_run_workshops << endl << Cs.efficiency << endl << Cs.exist;
+			file.close();
+			cout << "Data was saved" << endl;
+			system("pause");
+		}
 
+		if (choice == 7) {
+			ifstream file_handler("data.txt");
+			string name;
+
+			if (file_handler.is_open()) {
+
+				file_handler >> Pp.len;
+				file_handler >> Pp.diameter;
+				file_handler >> Pp.in_repairing;
+				file_handler >> Pp.exist;
+
+				if (getline(file_handler, name)) Cs.name = name;
+				if (getline(file_handler, name)) Cs.name = name;
+				file_handler >> Cs.num_workshops;
+				file_handler >> Cs.num_run_workshops;
+				file_handler >> Cs.efficiency;
+				file_handler >> Cs.exist;
+
+				cout << "Data was load" << endl;
+			}
+			else cout << "There is no data file" << endl;
+			system("pause");
+
+
+		}
 	}
-
 	return 0;
 }
