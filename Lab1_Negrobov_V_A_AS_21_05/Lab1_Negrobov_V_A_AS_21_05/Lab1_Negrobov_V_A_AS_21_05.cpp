@@ -23,25 +23,29 @@ struct Compr_station {
 };
 
 
-float get_float_value(float least=0) {
+float get_float_value(float least=0, float great= std::numeric_limits<float>::max()) {
 	float val = 0;
-	while (true) {
-		cin >> val;
-		if ((val > least) && (cin.good())) return val;
-		cin.clear();
-		cin.ignore(INT_MAX, '\n');
-		cout << "Please, input correct value: ";
-	}
-}
-
-int get_int_value(float least=0, float great=std::numeric_limits<float>::max()) {
-	int val = 0;
 	while (true) {
 		cin >> val;
 		if ((val > least) && cin.good() && (val < great)) return val;
 		cin.clear();
-		cin.ignore(INT_MAX, '\n');
+		cin.ignore(10000, '\n');
 		cout << "Please, input correct value: ";
+	}
+}
+
+int get_int_value(float least=0, float great=std::numeric_limits<int>::max()) {
+	int val = 0;
+	while (true) {
+		if ((cin >> val) && (val > least) && cin.good() && (val < great)) {
+			return val;
+		}
+		else {
+			cin.clear();
+			cin.ignore(10000, '\n');
+			cout << "Please, input correct value: ";
+		}
+		
 	}
 }
 
@@ -58,7 +62,7 @@ bool pipe_in_rep_input() {
 		else cout << "Input the correct number: ";
 
 		cin.clear();
-		cin.ignore(INT_MAX, '\n');
+		cin.ignore(10000, '\n');
 	}
 }
 
@@ -79,7 +83,7 @@ void view_obj(Pipe Pp, Compr_station Cs) {
 		cout << "Pipe" << endl;
 		cout << "Length of pipe: " << Pp.len << endl;
 		cout << "Diameter of pipe: " << Pp.diameter << endl;
-		string in_rep = Pp.in_repairing ? "Pipe is working" : "Pipe in repearing";
+		string in_rep = Pp.in_repairing ? "Pipe in repearing" : "Pipe is working";
 		cout << in_rep << endl << endl;
 	}
 	else {
@@ -129,7 +133,7 @@ int main()
 			else {
 				system("cls");
 				cout << "Input the Name of CS: ";
-				cin.ignore();
+				cin.ignore(10000, '\n');
 				getline(cin, Cs.name);
 				cout << "Input number of workshops: ";
 				Cs.num_workshops = get_int_value();
@@ -171,7 +175,7 @@ int main()
 			else {
 				system("cls");
 				cout << "Input the Name of CS: ";
-				cin.ignore();
+				cin.ignore(10000, '\n');
 				getline(cin, Cs.name);
 				cout << "Input number of workshops: ";
 				Cs.num_workshops = get_int_value();
@@ -203,8 +207,8 @@ int main()
 				file_handler >> Pp.in_repairing;
 				file_handler >> Pp.exist;
 
-				if (getline(file_handler, name)) Cs.name = name;
-				if (getline(file_handler, name)) Cs.name = name;
+				file_handler.ignore();
+				if (getline(file_handler, name, '\n')) Cs.name = name;
 				file_handler >> Cs.num_workshops;
 				file_handler >> Cs.num_run_workshops;
 				file_handler >> Cs.efficiency;
@@ -214,8 +218,6 @@ int main()
 			}
 			else cout << "There is no data file" << endl;
 			system("pause");
-
-
 		}
 	}
 	return 0;
