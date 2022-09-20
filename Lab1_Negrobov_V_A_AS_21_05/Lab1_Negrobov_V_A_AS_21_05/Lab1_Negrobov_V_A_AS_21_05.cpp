@@ -27,17 +27,18 @@ float get_float_value(float least=0, float great= std::numeric_limits<float>::ma
 	float val = 0;
 	while (true) {
 		cin >> val;
-		if ((val > least) && cin.good() && (val < great)) return val;
+		if (cin.good() && (val > least) &&  (val < great)) 
+			return val;
 		cin.clear();
 		cin.ignore(10000, '\n');
 		cout << "Please, input correct value: ";
 	}
 }
 
-int get_int_value(float least=0, float great=std::numeric_limits<int>::max()) {
+int get_int_value(float least = 0, float great = std::numeric_limits<int>::max()) {
 	int val = 0;
 	while (true) {
-		if ((cin >> val) && (val > least) && cin.good() && (val < great)) {
+		if (cin.good() && (cin >> val) && (val >= least) && (val < great)) {
 			return val;
 		}
 		else {
@@ -45,13 +46,14 @@ int get_int_value(float least=0, float great=std::numeric_limits<int>::max()) {
 			cin.ignore(10000, '\n');
 			cout << "Please, input correct value: ";
 		}
-		
 	}
 }
 
 
 bool pipe_in_rep_input() {
-	int in_repearing = false;
+	bool in_repearing = false;
+	cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
+
 	while (true) {
 		cin >> in_repearing;
 
@@ -92,111 +94,17 @@ void view_obj(Pipe Pp, Compr_station Cs) {
 };
 
 
-int main()
-{
-	Pipe Pp;
-	Compr_station Cs;
+void file_read(Pipe& Pp, Compr_station& Cs) {
+	ofstream file("data.txt");
+	file << Pp.len << endl << Pp.diameter << endl << Pp.in_repairing << endl << Pp.exist << endl
+		<< Cs.name << endl << Cs.num_workshops << endl << Cs.num_run_workshops << endl << Cs.efficiency << endl << Cs.exist;
+	file.close();
+	cout << "Data was saved" << endl;
+}
 
-	while (true) {
-		system("cls");
-		cout << "1.Add a pipe 2.Add a CS 3.View all objects 4.Edit pipe 5.Edit CS 6.save 7.Load 0.Exit" << endl;
-		int choice = get_int_value(-1, 8);
 
-		if (choice == 0) {
-			system("cls");
-			cout << "Goodbye";
-			break;
-		}
-
-		if (choice == 1) {
-			if (Pp.exist == true) {
-				cout << "Pipe exist" << endl;
-				system("pause");
-			}
-			else {
-				system("cls");
-				cout << "Input the length of Pipe: ";
-				Pp.len = get_float_value();
-				cout << "Input the diameter of Pipe: ";
-				Pp.diameter = get_float_value();
-				cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
-				Pp.in_repairing = pipe_in_rep_input();
-				Pp.exist = true;
-			}
-		}
-
-		if (choice == 2) {
-			if (Cs.exist == true) {
-				cout << "CS exist" << endl;
-				system("pause");
-			}
-			else {
-				system("cls");
-				cout << "Input the Name of CS: ";
-				cin.ignore(10000, '\n');
-				getline(cin, Cs.name);
-				cout << "Input number of workshops: ";
-				Cs.num_workshops = get_int_value();
-				cout << "Input number of running workshops: ";
-				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
-				cout << "Input the efficiency of CS: ";
-				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
-				Cs.exist = true;
-			}
-		}
-
-		if (choice == 3) {
-			view_obj(Pp, Cs);
-			system("pause");
-		}
-
-		if (choice == 4) {
-			if (Pp.exist == false) {
-				cout << "There is no pipe to edit" << endl;
-				system("pause");
-			}
-			else {
-				system("cls");
-				cout << "Input the length of Pipe: ";
-				Pp.len = get_float_value();
-				cout << "Input the diameter of Pipe: ";
-				Pp.diameter = get_float_value();
-				cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
-				Pp.in_repairing = pipe_in_rep_input();
-				Pp.exist = true;
-			}
-		}
-
-		if (choice == 5) {
-			if (Cs.exist == false) {
-				cout << "There is no CS now" << endl;
-				system("pause");
-			}
-			else {
-				system("cls");
-				cout << "Input the Name of CS: ";
-				cin.ignore(10000, '\n');
-				getline(cin, Cs.name);
-				cout << "Input number of workshops: ";
-				Cs.num_workshops = get_int_value();
-				cout << "Input number of running workshops: ";
-				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
-				cout << "Input the efficiency of CS: ";
-				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
-				Cs.exist = true;
-			}
-		}
-
-		if (choice == 6) {
-			ofstream file("data.txt");
-			file << Pp.len << endl << Pp.diameter << endl << Pp.in_repairing << endl << Pp.exist << endl
-			 << Cs.name << endl << Cs.num_workshops << endl << Cs.num_run_workshops << endl << Cs.efficiency << endl << Cs.exist;
-			file.close();
-			cout << "Data was saved" << endl;
-			system("pause");
-		}
-
-		if (choice == 7) {
+void file_write(Pipe& Pp, Compr_station& Cs) {
+	{
 			ifstream file_handler("data.txt");
 			string name;
 
@@ -217,8 +125,73 @@ int main()
 				cout << "Data was load" << endl;
 			}
 			else cout << "There is no data file" << endl;
-			system("pause");
 		}
+}
+
+
+int main()
+{
+	Pipe Pp;
+	Compr_station Cs;
+
+	while (true) {
+		cout << "1.Add a pipe 2.Add a CS 3.View all objects 4.Edit pipe 5.Edit CS 6.save 7.Load 0.Exit" << endl;
+		int choice = get_int_value(0, 8);
+
+		if (choice == 0) {
+			cout << "Goodbye";
+			break;
+		}
+
+		if (choice == 1) {
+			cout << "Input the length of Pipe: ";
+			Pp.len = get_float_value();
+			cout << "Input the diameter of Pipe: ";
+			Pp.diameter = get_float_value();
+			Pp.in_repairing = pipe_in_rep_input();
+			Pp.exist = true;
+		}
+
+		if (choice == 2) {
+			cout << "Input the Name of CS: ";
+			cin.ignore(10000, '\n');
+			getline(cin, Cs.name);
+			cout << "Input number of workshops: ";
+			Cs.num_workshops = get_int_value(1);
+			cout << "Input number of running workshops: ";
+			Cs.num_run_workshops = get_int_value(1, Cs.num_workshops + 1);
+			cout << "Input the efficiency of CS: ";
+			Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
+			Cs.exist = true;
+			}
+
+		if (choice == 3) {
+			view_obj(Pp, Cs);
+		}
+
+		if (choice == 4) {
+			if (Pp.exist == false) cout << "There is no pipe to edit" << endl;
+			else Pp.in_repairing = pipe_in_rep_input();
+			}
+
+		if (choice == 5) {
+			if (Cs.exist == false) {
+				cout << "There is no CS now" << endl;
+			}
+			else {
+				cout << "Input the Name of CS: ";
+				cin.ignore(10000, '\n');
+				getline(cin, Cs.name);
+				cout << "Input number of running workshops: ";
+				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
+				cout << "Input the efficiency of CS: ";
+				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
+				Cs.exist = true;
+			}
+		}
+
+		if (choice == 6) file_read(Pp, Cs);
+		if (choice == 7) file_write(Pp, Cs);
 	}
 	return 0;
 }
