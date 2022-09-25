@@ -10,7 +10,6 @@ struct Pipe {
 	float len = 0;
 	float diameter = 0;
 	bool in_repairing = 0;
-	bool exist = false;
 };
 
 
@@ -19,7 +18,6 @@ struct Compr_station {
 	int num_workshops = 0;
 	int num_run_workshops = 0;
 	float efficiency = 0;
-	bool exist = false;
 };
 
 
@@ -71,8 +69,8 @@ bool pipe_in_rep_input() {
 
 void file_write(const Pipe& Pp, const Compr_station& Cs) {
 	ofstream file("data.txt");
-	file << Pp.len << endl << Pp.diameter << endl << Pp.in_repairing << endl << Pp.exist << endl
-		<< Cs.name << endl << Cs.num_workshops << endl << Cs.num_run_workshops << endl << Cs.efficiency << endl << Cs.exist;
+	file << Pp.len << endl << Pp.diameter << endl << Pp.in_repairing << endl 
+		 << Cs.name << endl << Cs.num_workshops << endl << Cs.num_run_workshops << endl << Cs.efficiency << endl;
 	file.close();
 	cout << "Data was saved" << endl;
 }
@@ -85,11 +83,11 @@ void file_read(Pipe& Pp, Compr_station& Cs) {
 
 			if (file_handler.is_open()) {
 
-				file_handler >> Pp.len >> Pp.diameter >> Pp.in_repairing >> Pp.exist;
+				file_handler >> Pp.len >> Pp.diameter >> Pp.in_repairing;
 
 				file_handler.ignore();
 				if (getline(file_handler, name, '\n')) Cs.name = name;
-				file_handler >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency >> Cs.exist;
+				file_handler >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency;
 				cout << "Data was load" << endl;
 			}
 			else cout << "There is no data file" << endl;
@@ -102,7 +100,6 @@ istream& operator >> (istream& in, Pipe& Pp) {
 	cout << "Input the diameter of Pipe: ";
 	Pp.diameter = get_float_value();
 	Pp.in_repairing = pipe_in_rep_input();
-	Pp.exist = true;
 	return in;
 }
 
@@ -117,12 +114,11 @@ istream& operator >> (istream& in, Compr_station& Cs) {
 	Cs.num_run_workshops = get_int_value(1, Cs.num_workshops + 1);
 	cout << "Input the efficiency of CS: ";
 	Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
-	Cs.exist = true;
 	return in;
 }
 
 ostream& operator << (ostream& out, Compr_station& Cs) {
-	if (Cs.exist == true) {
+	if (!(Cs.num_workshops == 0)) {
 		cout << "Compressor station" << endl;
 		cout << "The name of compressor station: " << Cs.name << endl;
 		cout << "Number of workshops on conpressor station: " << Cs.num_workshops << endl;
@@ -137,7 +133,7 @@ ostream& operator << (ostream& out, Compr_station& Cs) {
 
 
 ostream& operator << (ostream& out, Pipe& Pp) {
-	if (Pp.exist == true) {
+	if (!(Pp.len == 0)) {
 		cout << "Pipe" << endl;
 		cout << "Length of pipe: " << Pp.len << endl;
 		cout << "Diameter of pipe: " << Pp.diameter << endl;
@@ -172,12 +168,12 @@ int main()
 		if (choice == 3) cout << Pp << Cs;
 
 		if (choice == 4) {
-			if (Pp.exist == false) cout << "There is no pipe to edit" << endl;
+			if (Pp.len == 0) cout << "There is no pipe to edit" << endl;
 			else Pp.in_repairing = pipe_in_rep_input();
 			}
 
 		if (choice == 5) {
-			if (Cs.exist == false) {
+			if (Cs.num_workshops == 0) {
 				cout << "There is no CS now" << endl;
 			}
 			else {
