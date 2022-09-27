@@ -25,20 +25,17 @@ float get_float_value(float least=0, float great= std::numeric_limits<float>::ma
 	float val = 0;
 	while (true) {
 		cin >> val;
-		if (cin.good() && (val > least) && (val < great)) 
-			return val;
+		if (cin.good() && (val > least) && (val < great)) return val;
 		cin.clear();
 		cin.ignore(10000, '\n');
 		cout << "Please, input correct value: ";
 	}
 }
 
-int get_int_value(float least=0, float great = std::numeric_limits<int>::max()) {
+int get_int_value(int least=0, int great = std::numeric_limits<int>::max()) {
 	int val = 0;
 	while (true) {
-		if (cin.good() && (cin >> val) && (val >= least) && (val < great)) {
-			return val;
-		}
+		if (cin.good() && (cin >> val) && (val >= least) && (val < great)) return val;
 		else {
 			cin.clear();
 			cin.ignore(10000, '\n');
@@ -49,21 +46,8 @@ int get_int_value(float least=0, float great = std::numeric_limits<int>::max()) 
 
 
 bool pipe_in_rep_input() {
-	int in_repearing = 1;
 	cout << "1.Pipe is in repearing 2.Pipe is working" << endl;
-
-	while (true) {
-		cin >> in_repearing;
-
-		if (cin.good() && (in_repearing == 1)) return true;
-
-		else if (cin.good() && (in_repearing == 2)) return false;
-
-		else cout << "Input the correct number: ";
-
-		cin.clear();
-		cin.ignore(10000, '\n');
-	}
+	return get_int_value(1, 3) == 1;
 }
 
 
@@ -161,28 +145,21 @@ int main()
 			break;
 		}
 		if (choice == 1) cin >> Pp;
-
 		if (choice == 2) cin >> Cs;
-
 		if (choice == 3) cout << Pp << Cs;
 
 		if (choice == 4) {
 			if (Pp.len == 0) cout << "There is no pipe to edit" << endl;
 			else Pp.in_repairing = pipe_in_rep_input();
 			}
-
 		if (choice == 5) {
 			if (Cs.num_workshops == 0) {
 				cout << "There is no CS now" << endl;
 			}
 			else {
-				cout << "Input the Name of CS: ";
-				cin.ignore(10000, '\n');
-				getline(cin, Cs.name);
 				cout << "Input number of running workshops: ";
 				Cs.num_run_workshops = get_int_value(0, Cs.num_workshops + 1);
-				cout << "Input the efficiency of CS: ";
-				Cs.efficiency = get_float_value(-std::numeric_limits<float>::max());
+
 			}
 		}
 
