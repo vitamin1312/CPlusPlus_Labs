@@ -14,7 +14,7 @@ struct Pipe {
 
 
 struct Compr_station {
-	string name = " ";
+	string name = "";
 	int num_workshops = 0;
 	int num_run_workshops = 0;
 	float efficiency = 0;
@@ -25,7 +25,7 @@ float get_float_value(float least=0, float great= std::numeric_limits<float>::ma
 	float val = 0;
 	while (true) {
 		cin >> val;
-		if (cin.good() && (val > least) &&  (val < great)) 
+		if (cin.good() && (val > least) && (val < great)) 
 			return val;
 		cin.clear();
 		cin.ignore(10000, '\n');
@@ -33,7 +33,7 @@ float get_float_value(float least=0, float great= std::numeric_limits<float>::ma
 	}
 }
 
-int get_int_value(float least = 0, float great = std::numeric_limits<int>::max()) {
+int get_int_value(float least=0, float great = std::numeric_limits<int>::max()) {
 	int val = 0;
 	while (true) {
 		if (cin.good() && (cin >> val) && (val >= least) && (val < great)) {
@@ -55,9 +55,9 @@ bool pipe_in_rep_input() {
 	while (true) {
 		cin >> in_repearing;
 
-		if ((in_repearing == 1) && cin.good()) return true;
+		if (cin.good() && (in_repearing == 1)) return true;
 
-		else if ((in_repearing == 2) && (cin.good())) return false;
+		else if (cin.good() && (in_repearing == 2)) return false;
 
 		else cout << "Input the correct number: ";
 
@@ -117,7 +117,7 @@ istream& operator >> (istream& in, Compr_station& Cs) {
 	return in;
 }
 
-ostream& operator << (ostream& out, Compr_station& Cs) {
+ostream& operator << (ostream& out, const Compr_station& Cs) {
 	if (!(Cs.num_workshops == 0)) {
 		cout << "Compressor station" << endl;
 		cout << "The name of compressor station: " << Cs.name << endl;
@@ -132,7 +132,7 @@ ostream& operator << (ostream& out, Compr_station& Cs) {
 }
 
 
-ostream& operator << (ostream& out, Pipe& Pp) {
+ostream& operator << (ostream& out, const Pipe& Pp) {
 	if (!(Pp.len == 0)) {
 		cout << "Pipe" << endl;
 		cout << "Length of pipe: " << Pp.len << endl;
@@ -160,7 +160,6 @@ int main()
 			cout << "Goodbye";
 			break;
 		}
-
 		if (choice == 1) cin >> Pp;
 
 		if (choice == 2) cin >> Cs;
