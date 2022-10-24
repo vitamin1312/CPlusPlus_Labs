@@ -147,7 +147,6 @@
   <ItemGroup>
     <ClInclude Include="Compr_station.h" />
     <ClInclude Include="Pipe.h" />
-    <ClInclude Include="resource.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

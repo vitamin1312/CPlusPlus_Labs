@@ -13,6 +13,7 @@ private:
 public:
 	int id = 0;
 
+	Pipe(int id);
 	void to_file();
 	void read_file();
 	void edit();

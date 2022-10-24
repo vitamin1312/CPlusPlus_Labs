@@ -2,6 +2,12 @@
 #include "utils.h"
 
 
+Compr_station::Compr_station(int id) {
+	this->id = id;
+	std::cout << "Compr_station was created" << std::endl;
+}
+
+
 void Compr_station::edit(){
 	if (this->num_workshops == 0) {
 		std::cout << "There is no CS now" << std::endl;

@@ -1,5 +1,6 @@
 ﻿#include <iostream>
 #include <fstream>
+#include <unordered_map>
 
 #include "utils.h"
 #include "Pipe.h"
@@ -8,14 +9,18 @@
 using namespace std;
 
 
-unsigned long long int Pp_id = 0;
-unsigned long long int Cs_id = 0;
+int Pp_id = 0;
+int Cs_id = 0;
 
 
 int main()
 {
-	Pipe Pp;
-	Compr_station Cs;
+	Pipe Pp(0);
+	Compr_station Cs(0);
+
+	unordered_map<int, Pipe> Pipes;
+	unordered_map<int, Compr_station> Compr_stations;
+
 
 
 	while (true) {
@@ -29,9 +34,13 @@ int main()
 			return 0;
 		case 1:
 			cin >> Pp;
+			Pipes[Pp_id++] = Pp;
+			Pp.id = Pp_id;
 			break;
 		case 2:
 			cin >> Cs;
+			Compr_stations[Cs_id++] = Cs;
+			Cs.id = Cs_id;
 			break;
 		case 3:
 			cout << Pp << Cs;

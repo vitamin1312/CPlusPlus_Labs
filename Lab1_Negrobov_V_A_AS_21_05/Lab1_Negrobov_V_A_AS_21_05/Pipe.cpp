@@ -2,6 +2,12 @@
 #include "utils.h"
 
 
+Pipe::Pipe(int id) {
+	this->id = id;
+	std::cout << "Pipe was created" << std::endl;
+}
+
+
 void Pipe::edit() {
 	if (this->len == 0) std::cout << "There is no pipe to edit" << std::endl;
 	else this->in_repairing = pipe_in_rep_input();

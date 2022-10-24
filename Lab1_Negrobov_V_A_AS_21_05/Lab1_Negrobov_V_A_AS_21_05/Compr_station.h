@@ -7,6 +7,7 @@
 class Compr_station
 {
 private:
+	Compr_station(int id);
 	std::string name = "";
 	int num_workshops = 0;
 	int num_run_workshops = 0;
