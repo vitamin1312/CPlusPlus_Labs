@@ -1,6 +1,7 @@
 ﻿#include <iostream>
 #include <fstream>
 #include <unordered_map>
+#include <unordered_set>
 
 #include "utils.h"
 #include "Pipe.h"
@@ -9,55 +10,115 @@
 using namespace std;
 
 
-int Pp_id = 0;
-int Cs_id = 0;
+/*
+unordered_set<int> find_in_rep_pipes(unordered_map<int, Pipe>& pipes) {
+	unordered_set<int> idx;
+	for (const auto& Pp : pipes) {
+		if (Pp.second.in_repairing == true) {
+			idx.insert(Pp.first);
+		}
+		return idx;
+	}
+}
+
+unordered_set<int> find_name_pipes(string name, unordered_map<int, Pipe>& pipes) {
+	unordered_set<int> idx;
+	for (const auto& Pp : pipes) {
+		if (Pp.second.name.find(name) != string::npos) {
+			idx.insert(Pp.first);
+		}
+		return idx;
+	}
+}
+*/
 
 
 int main()
 {
-	Pipe Pp(0);
-	Compr_station Cs(0);
-
-	unordered_map<int, Pipe> Pipes;
-	unordered_map<int, Compr_station> Compr_stations;
-
-
+	unordered_map<int, Pipe> pipes;
+	unordered_map<int, Compr_station> compr_stations;
 
 	while (true) {
-		cout << "1.Add a pipe 2.Add a CS 3.View all objects 4.Edit pipe 5.Edit CS 6.save 7.Load 0.Exit" << endl;
-		int choice = get_int_value(0, 8);
+		print_menu();
 
-		switch (choice)
+		switch (get_num_value(0, 10))
 		{
 		case 0:
-			cout << "Goodbye";
+		{	cout << "Goodbye";
 			return 0;
+		}
+
 		case 1:
+		{	Pipe Pp;
 			cin >> Pp;
-			Pipes[Pp_id++] = Pp;
-			Pp.id = Pp_id;
+			pipes[Pp.get_id()] = Pp;
+			Pp.up_id();
 			break;
+		}
+
 		case 2:
+		{
+			Compr_station Cs;
 			cin >> Cs;
-			Compr_stations[Cs_id++] = Cs;
-			Cs.id = Cs_id;
+			compr_stations[Cs.get_id()] = Cs;
+			Cs.up_id();
 			break;
+		}
+
 		case 3:
-			cout << Pp << Cs;
+		{
+			show_pipes(pipes);
+			show_compr_stations(compr_stations);
 			break;
+		}
+
 		case 4:
-			Pp.edit();
+		{
+
+			del_pipe(pipes);
 			break;
+		}
+
 		case 5:
-			Cs.edit();
+		{
+			del_compr_station(compr_stations);
 			break;
+		}
+
 		case 6:
-			Pp.to_file();
-			Cs.to_file();
+		{
+			edit_pipe(pipes);
 			break;
+		}
+
 		case 7:
-			Pp.read_file();
-			Cs.read_file();
+		{
+			edit_compr_station(compr_stations);
+			break;
+		}
+
+
+		case 8:
+		{
+			string name;
+			cout << "Input name of file for saving: ";
+			cin >> name;
+			save_data(name, pipes, compr_stations);
+			cout << "Data was saved" << endl;
+			break;
+		}
+
+		case 9:
+		{
+			string name;
+			cout << "Input name of file for loading: ";
+			cin >> name;
+			read_data(name, pipes, compr_stations);
+			cout << "Data was loaded" << endl;
+			break;
+		}
+
+		default:
 			break;
 		}
 	}

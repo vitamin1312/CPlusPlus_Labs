@@ -7,24 +7,23 @@
 class Compr_station
 {
 private:
-	Compr_station(int id);
-	std::string name = "";
-	int num_workshops = 0;
-	int num_run_workshops = 0;
-	float efficiency = 0;
+	std::string name;
+	int num_workshops;
+	int num_run_workshops;
+	double efficiency;
 
 public:
-	int id = 0;
-
+	static int id;
+	Compr_station();
 	void edit();
-	void to_file();
-	void read_file();
+	int unused_per();
+	int get_id();
+	void up_id();
 
 	friend std::istream& operator >> (std::istream& in, Compr_station& Cs);
 	friend std::ostream& operator << (std::ostream& out, const Compr_station& Cs);
+	friend std::ifstream& operator >> (std::ifstream& fin, Compr_station& Cs);
+	friend std::ofstream& operator << (std::ofstream& fout, const Compr_station& Cs);
 
 };
 
-
-std::istream& operator >> (std::istream& in, Compr_station& Cs);
-std::ostream& operator << (std::ostream& out, const Compr_station& Cs);
