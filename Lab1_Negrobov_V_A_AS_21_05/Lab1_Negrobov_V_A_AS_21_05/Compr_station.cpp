@@ -15,6 +15,11 @@ std::string Compr_station::get_name() {
 }
 
 
+void Compr_station::set_eff(double eff) {
+	this->efficiency = eff;
+}
+
+
 void Compr_station::edit(){
 	if (this->num_workshops == 0) {
 		std::cout << "There is no CS now" << std::endl;
@@ -55,10 +60,13 @@ std::istream& operator >> (std::istream& in, Compr_station& Cs) {
 
 
 std::ostream& operator << (std::ostream& out, const Compr_station& Cs) {
+	std::cout << "----------------------------------------------------------------" << std::endl;
+	std::cout << "Compresor Station" << std::endl;
 	std::cout << "The name of compressor station: " << Cs.name << std::endl;
 	std::cout << "Number of workshops on conpressor station: " << Cs.num_workshops << std::endl;
 	std::cout << "Number of running workshops on conpressor station: " << Cs.num_run_workshops << std::endl;
-	std::cout << "Efficiency compressor station: " << Cs.efficiency << std::endl << std::endl;
+	std::cout << "Efficiency compressor station: " << Cs.efficiency << std::endl;
+	std::cout << "----------------------------------------------------------------" << std::endl << std::endl;
 
 	return out;
 }

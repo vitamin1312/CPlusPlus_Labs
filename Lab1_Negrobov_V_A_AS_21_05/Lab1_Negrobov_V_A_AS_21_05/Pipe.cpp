@@ -77,11 +77,14 @@ std::istream& operator >> (std::istream& in, Pipe& Pp) {
 
 std::ostream& operator << (std::ostream& out, const Pipe& Pp) {
 
+	std::cout << "----------------------------------------------------------------" << std::endl;
+	std::cout << "Pipe" << std::endl;
 	std::cout << "The name of Pipe" << Pp.name << std::endl;
 	std::cout << "Length of pipe: " << Pp.len << std::endl;
 	std::cout << "Diameter of pipe: " << Pp.diameter << std::endl;
 	std::string in_rep = Pp.in_repairing ? "Pipe in repearing" : "Pipe is working";
-	std::cout << in_rep << std::endl << std::endl;
+	std::cout << in_rep << std::endl;
+	std::cout << "----------------------------------------------------------------" << std::endl << std::endl;
 	return out;
 }
 

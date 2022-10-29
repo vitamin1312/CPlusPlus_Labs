@@ -20,6 +20,7 @@ public:
 	int get_id();
 	void up_id();
 	std::string get_name();
+	void set_eff(double);
 
 	friend std::istream& operator >> (std::istream& in, Compr_station& Cs);
 	friend std::ostream& operator << (std::ostream& out, const Compr_station& Cs);
