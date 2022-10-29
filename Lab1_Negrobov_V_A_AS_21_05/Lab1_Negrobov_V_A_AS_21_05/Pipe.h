@@ -20,6 +20,9 @@ public:
 	void edit();
 	int get_id();
 	void up_id();
+	bool get_in_rep();
+	void change_in_rep();
+	std::string get_name();
 
 
 	friend std::istream& operator >> (std::istream& in, Pipe& Pp);

@@ -19,6 +19,7 @@ public:
 	int unused_per();
 	int get_id();
 	void up_id();
+	std::string get_name();
 
 	friend std::istream& operator >> (std::istream& in, Compr_station& Cs);
 	friend std::ostream& operator << (std::ostream& out, const Compr_station& Cs);

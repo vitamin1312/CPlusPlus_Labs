@@ -10,6 +10,11 @@ Compr_station::Compr_station() {
 }
 
 
+std::string Compr_station::get_name() {
+	return this->name;
+}
+
+
 void Compr_station::edit(){
 	if (this->num_workshops == 0) {
 		std::cout << "There is no CS now" << std::endl;

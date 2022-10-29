@@ -19,6 +19,22 @@ void Pipe::up_id() {
 }
 
 
+std::string Pipe::get_name() {
+	return this->name;
+}
+
+
+bool Pipe::get_in_rep() {
+	return this->in_repairing;
+}
+
+
+void Pipe::change_in_rep() {
+	if (this->in_repairing == true) this->in_repairing = false;
+	else this->in_repairing = true;
+}
+
+
 void Pipe::edit() {
 	if (this->len == 0) std::cout << "There is no pipe to edit" << std::endl;
 	else this->in_repairing = pipe_in_rep_input();

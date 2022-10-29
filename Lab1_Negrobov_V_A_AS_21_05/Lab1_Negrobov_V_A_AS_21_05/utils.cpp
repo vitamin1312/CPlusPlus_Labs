@@ -10,12 +10,14 @@ void print_menu() {
 	std::cout << "1.Add a pipe" << std::endl
 		<< "2.Add a CS" << std::endl
 		<< "3.View all objects" << std::endl
-		<< "4.Delete pipe" << std::endl
-		<< "5.Delete CS" << std::endl
-		<< "6.Edit pipe" << std::endl
-		<< "7.Edit CS" << std::endl
-		<< "8.save" << std::endl
-		<< "9.Load" << std::endl
+		<< "4.Delete single pipe" << std::endl
+		<< "5.Delete single CS" << std::endl
+		<< "6.Edit single pipe" << std::endl
+		<< "7.Edit single CS" << std::endl
+		<< "8.Filter pipes" << std::endl
+		<< "9.Filter CS" << std::endl
+		<< "10.save" << std::endl
+		<< "11.Load" << std::endl
 		<< "0.Exit" << std::endl;
 }
 
