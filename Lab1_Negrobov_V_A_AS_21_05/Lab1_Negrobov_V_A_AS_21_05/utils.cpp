@@ -7,61 +7,50 @@ bool pipe_in_rep_input() {
 }
 
 
-void del_pipe(std::unordered_map<int, Pipe>& pipes) {
-	int id;
-	std::cout << "Select the pipe id: ";
-	std::cin >> id;
-
+bool del_pipe(int id, std::unordered_map<int, Pipe>& pipes) {
 	if (pipes.find(id) != pipes.end()) {
 		pipes.erase(id);
-		std::cout << "Pipe was deleted" << std::endl;
+		return true;
 	}
+
 	else {
-		std::cout << "There is no pipe with this id" << std::endl;
+		return false;
 	}
 }
 
 
-void del_compr_station(std::unordered_map<int, Compr_station>& compr_stations) {
-	int id;
-	std::cout << "Select the pipe id: ";
-	std::cin >> id;
+bool del_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations) {
 
 	if (compr_stations.find(id) != compr_stations.end()) {
 		compr_stations.erase(id);
-		std::cout << "CS was deleted" << std::endl;
+		return true;
 	}
 	else {
-		std::cout << "There is no CS with this id" << std::endl;
+		return false;
 	}
 }
 
 
-void edit_pipe(std::unordered_map<int, Pipe>& pipes) {
-	int id;
-	std::cout << "Select the pipe id: " << std::endl;
-	std::cin >> id;
+bool  edit_pipe(int id, std::unordered_map<int, Pipe>& pipes) {
 
 	if (pipes.find(id) != pipes.end()) {
 		pipes[id].edit();
-		std::cout << "Pipe was edited" << std::endl;
+		return true;
 	}
 	else {
-		std::cout << "There is no pipe with this id" << std::endl;
+		return false;
 	}
 }
 
-void edit_compr_station(std::unordered_map<int, Compr_station>& compr_stations) {
-	int id;
-	std::cout << "Select the CS id: " << std::endl;
-	std::cin >> id;
+
+bool edit_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations) {
 
 	if (compr_stations.find(id) != compr_stations.end()) {
 		compr_stations[id].edit();
-		std::cout << "CS was edited" << std::endl;
+		return true;
 	}
 	else {
-		std::cout << "There is no CS with this id" << std::endl;
+		return false;
 	}
 
 }
@@ -85,7 +74,7 @@ void save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, c
 }
 
 
-void read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations) {
+bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations) {
 
 	pipes.clear();
 	compr_stations.clear();
@@ -114,11 +103,13 @@ void read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 			Cs.up_id();
 		}
 
+		return true;
+
 	}
 
 	else
 	{
-		std::cout << "There is no file with that name" << std::endl;
+		return false;
 	}
 }
 
@@ -137,12 +128,9 @@ std::unordered_set<int> get_new_idx(std::unordered_set<int> idx) {
 		else if (idx.find(id) != idx.end()) {
 			new_idx.insert(id);
 		}
-
 		else {
 			std::cout << "There is no object with that id" << std::endl;
 		}
-
-
 	}
 	return new_idx;
 }
@@ -150,7 +138,7 @@ std::unordered_set<int> get_new_idx(std::unordered_set<int> idx) {
 
 void filter_by_rep(const bool in_rep, std::unordered_map<int, Pipe>& pipes, std::unordered_set<int>& idx) {
 	for (auto& Pp : pipes) {
-		if (Pp.second.get_in_rep() == true) {
+		if (Pp.second.get_in_rep() == in_rep) {
 			idx.insert(Pp.first);
 		}
 	}
@@ -164,7 +152,6 @@ void filter_unused_per(int percent, const bool more, std::unordered_map<int, Com
 				idx.insert(Cs.first);
 			}
 		}
-
 		else {
 			if (Cs.second.unused_per() > percent) {
 				idx.insert(Cs.first);
@@ -174,9 +161,9 @@ void filter_unused_per(int percent, const bool more, std::unordered_map<int, Com
 }
 
 
-void change_in_rep(std::unordered_set<int>& idx, std::unordered_map<int, Pipe>& pipes) {
+void change_in_rep(bool in_rep, std::unordered_set<int>& idx, std::unordered_map<int, Pipe>& pipes) {
 	for (int i : idx) {
-		pipes[i].change_in_rep();
+		pipes[i].set_in_rep(in_rep);
     }
 }
 
@@ -200,77 +187,6 @@ void del_or_edit() {
 }
 
 
-void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations) {
-
-	if (choice == 0){
-		std::cout << "Goodbye";
-	}
-
-	if (choice == 1){
-		Pipe Pp;
-		std::cin >> Pp;
-		pipes[Pp.get_id()] = Pp;
-		//pipes_idx.insert(Pp.get_id());
-		Pp.up_id();
-	}
-
-	if (choice == 2){
-		Compr_station Cs;
-		std::cin >> Cs;
-		compr_stations[Cs.get_id()] = Cs;
-		//comprt_st_idx.insert(Cs.get_id());
-		Cs.up_id();
-	}
-
-	if (choice == 3){
-		show(pipes);
-		show(compr_stations);
-	}
-
-	if (choice == 4){
-		del_pipe(pipes);
-	}
-
-	if (choice == 5){
-		del_compr_station(compr_stations);
-	}
-
-	if (choice == 6){
-		edit_pipe(pipes);
-	}
-
-	if (choice == 7){
-		edit_compr_station(compr_stations);
-	}
-
-	if (choice == 8){
-		filter_pipes(pipes);
-	}
-
-	if (choice == 9){
-		filter_compr_stations(compr_stations);
-	}
-
-
-	if (choice == 10){
-		std::string name;
-		std::cout << "Input name of file for saving: ";
-		std::cin >> name;
-		save_data(name, pipes, compr_stations);
-		std::cout << "Data was saved" << std::endl;
-	}
-
-	if (choice == 11){
-		std::string name;
-		std::cout << "Input name of file for loading: ";
-		std::cin >> name;
-		read_data(name, pipes, compr_stations);
-		std::cout << "Data was loaded" << std::endl;
-	}
-
-}
-
-
 void filter_pipes(std::unordered_map<int, Pipe>& pipes) {
 	std::cout << "1.Filter by name" << std::endl
 		<< "2.Filter by \"In repearing\"" << std::endl
@@ -282,51 +198,50 @@ void filter_pipes(std::unordered_map<int, Pipe>& pipes) {
 
 		std::string name;
 		std::cout << "Input name of pipe: ";
-		std::cin >> name;
+		std::cin.ignore(10000, '\n');
+		std::getline(std::cin, name);
 
 		filter_by_name(name, pipes, idx);
-		show(idx, pipes);
 	}
 
 	if (choice == 2) {
 
 		filter_by_rep(true, pipes, idx);
-		show(idx, pipes);
-
 	}
 
 	if (choice == 3) {
 
 		filter_by_rep(false, pipes, idx);
-		show(idx, pipes);
-
 	}
 
-	if (idx.size() != 0) {
-		choose();
+	if (show(idx, pipes)) {
+
+		std::cout << "1.close" << std::endl << "2.filter pipes" << std::endl;
 		choice = get_num_value(1, 3);
 
 		if (choice == 1) {
+			return;
+		}
+
+		if (choice == 2) {
+			choose();
+			choice = get_num_value(1, 3);
+
+			if (choice == 1);
+			if (choice == 2) idx = get_new_idx(idx);
+
 			del_or_edit();
 
 			choice = get_num_value(1, 3);
 
 			if (choice == 1) del_objects(idx, pipes);
-			if (choice == 2) change_in_rep(idx, pipes);
+			if (choice == 2) {
+				bool in_rep;
+				std::cout << "Choose status: 1.In repairing, 2.Working" << std::endl;
+				in_rep = pipe_in_rep_input();
+				change_in_rep(in_rep, idx, pipes);
+			}
 		}
-
-		else if (choice == 2) {
-			std::unordered_set<int> new_idx = get_new_idx(idx);
-
-			del_or_edit();
-			choice = get_num_value(1, 3);
-
-			if (choice == 1) del_objects(new_idx, pipes);
-			if (choice == 2) change_in_rep(idx, pipes);
-		}
-	}
-	else {
-		std::cout << "There is no pipes" << std::endl;
 	}
 }
 
@@ -342,10 +257,10 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 
 		std::string name;
 		std::cout << "Input name of CS: ";
-		std::cin >> name;
+		std::cin.ignore(10000, '\n');
+		std::getline(std::cin, name);
 
 		filter_by_name(name, compr_stations, idx);
-		show(idx, compr_stations);
 	}
 
 	if (choice == 2) {
@@ -354,8 +269,6 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 		std::cout << "Input percent: ";
 		std::cin >> percent;
 		filter_unused_per(percent, true, compr_stations, idx);
-		show(idx, compr_stations);
-
 	}
 
 	if (choice == 3) {
@@ -365,16 +278,24 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 		std::cin >> percent;
 
 		filter_unused_per(false, percent, compr_stations, idx);
-		show(idx, compr_stations);
-
 	}
 
-	if (idx.size() != 0) {
-		choose();
+	if (show(idx, compr_stations)) {
+
+		std::cout << "1.close" << std::endl << "2.filter CS" << std::endl;
 		choice = get_num_value(1, 3);
 
 		if (choice == 1) {
-			del_or_edit();
+			return;
+		}
+
+		if (choice == 2) {
+			choose();
+			choice = get_num_value(1, 3);
+
+			if (choice == 1);
+			if (choice == 2) idx = get_new_idx(idx);
+
 
 			choice = get_num_value(1, 3);
 
@@ -386,23 +307,5 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 				change_eff(eff, idx, compr_stations);
 			}
 		}
-
-		else if (choice == 2) {
-			std::unordered_set<int> new_idx = get_new_idx(idx);
-
-			del_or_edit();
-			choice = get_num_value(1, 3);
-
-			if (choice == 1) del_objects(new_idx, compr_stations);
-			if (choice == 2) {
-				double eff;
-				std::cout << "Input the efficien of CS: ";
-				std::cin >> eff;
-				change_eff(eff, idx, compr_stations);
-			}
-		}
-	}
-	else {
-		std::cout << "There is no CS" << std::endl;
 	}
 }

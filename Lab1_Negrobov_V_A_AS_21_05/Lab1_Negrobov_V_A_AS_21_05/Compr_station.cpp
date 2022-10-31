@@ -5,50 +5,42 @@
 int Compr_station::id = 0;
 
 
-Compr_station::Compr_station() {
-	std::cout << "Compr_station was created" << std::endl;
-}
-
-
-std::string Compr_station::get_name() {
-	return this->name;
-}
-
-
 void Compr_station::set_eff(double eff) {
 	this->efficiency = eff;
 }
 
 
 void Compr_station::edit(){
-	if (this->num_workshops == 0) {
-		std::cout << "There is no CS now" << std::endl;
-	}
-	else {
-		std::cout << "Input number of running workshops: ";
-		this->num_run_workshops = get_num_value(0, this->num_workshops + 1);
-
-	}
+	std::cout << "Input number of running workshops: ";
+	this->num_run_workshops = get_num_value(0, this->num_workshops + 1);
 }
 
-int Compr_station::unused_per() {
-    int result = 1 - this->num_workshops / this->num_run_workshops * 100;
+double Compr_station::unused_per() {
+	double result = (1.0 - this->num_run_workshops / this->num_workshops) * 100;
 	return result;
 }
 
 
-int Compr_station::get_id() {
+int Compr_station::get_id() const {
 	return this->id;
 }
 
-void Compr_station::up_id() {
+void Compr_station::up_id() const {
 	this->id++;
 }
 
+
+std::string Compr_station::get_name() const {
+	return this->name;
+}
+
+
 std::istream& operator >> (std::istream& in, Compr_station& Cs) {
 	std::cout << "Input the Name of CS: ";
+
 	std::cin.ignore(10000, '\n');
 	std::getline(std::cin, Cs.name);
+
 	std::cout << "Input number of workshops: ";
 	Cs.num_workshops = get_num_value(0, std::numeric_limits<int>::max());
 	std::cout << "Input number of running workshops: ";

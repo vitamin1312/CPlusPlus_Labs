@@ -14,15 +14,12 @@ private:
 	static int id;
 
 public:
-	Pipe();
-	void to_file();
-	void read_file();
 	void edit();
-	int get_id();
-	void up_id();
-	bool get_in_rep();
-	void change_in_rep();
-	std::string get_name();
+	void set_in_rep(bool in_rep);
+	int get_id() const;
+	void up_id() const;
+	bool get_in_rep() const;
+	std::string get_name() const;
 
 
 	friend std::istream& operator >> (std::istream& in, Pipe& Pp);

@@ -11,16 +11,16 @@ private:
 	int num_workshops;
 	int num_run_workshops;
 	double efficiency;
+	static int id;
 
 public:
-	static int id;
-	Compr_station();
 	void edit();
-	int unused_per();
-	int get_id();
-	void up_id();
-	std::string get_name();
+	double unused_per();
 	void set_eff(double);
+	int get_id() const;
+	void up_id() const;
+	std::string get_name() const;
+
 
 	friend std::istream& operator >> (std::istream& in, Compr_station& Cs);
 	friend std::ostream& operator << (std::ostream& out, const Compr_station& Cs);

@@ -13,7 +13,7 @@ template <typename T>
 T get_num_value(T least, T great) {
 	T val = 0;
 	while (true) {
-		if (std::cin.good() && (std::cin >> val) && (val >= least) && (val < great)) return val;
+		if (std::cin >> val && !std::cin.fail() && (val >= least) && (val < great) && (std::cin.peek() == EOF || std::cin.peek() == '\n')) return val;
 		else {
 			std::cin.clear();
 			std::cin.ignore(10000, '\n');
@@ -24,23 +24,34 @@ T get_num_value(T least, T great) {
 
 
 template <typename T>
-void show(std::unordered_map<int, T>& object) {
+bool show(std::unordered_map<int, T>& object) {
 	if (object.size() != 0) {
 		for (const auto& obj : object) {
 			std::cout << "Object id: " << obj.first << std::endl;
 			std::cout << obj.second;
+
 		}
+		return true;
+	}
+	else {
+		std::cout << "There is no objects" << std::endl;
+		return false;
 	}
 }
 
 
 template <typename T>
-void show(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
+bool show(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
 	if (idx.size() != 0) {
 		for (int i : idx) {
 			std::cout << "Object id: " << i << std::endl;
 			std::cout << objects[i];
 		}
+		return true;
+	}
+	else {
+		std::cout << "There is no such objets" << std::endl;
+		return false;
 	}
 }
 
@@ -55,6 +66,8 @@ void filter_by_name(const std::string& name, std::unordered_map<int, T>& objects
 }
 
 
+using Filter = bool (*)();
+
 template <typename T>
 void del_objects(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
 	for (int i : idx) {
@@ -62,21 +75,20 @@ void del_objects(std::unordered_set<int>& idx, std::unordered_map<int, T>& objec
 	}
 }
 
-bool pipe_in_rep_input();
 
-void print_menu();
+bool pipe_in_rep_input();
 
 void save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations);
 
-void read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations);
+bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations);
 
-void del_pipe(std::unordered_map<int, Pipe>& pipes);
+bool del_pipe(int id, std::unordered_map<int, Pipe>& pipes);
 
-void del_compr_station(std::unordered_map<int, Compr_station>& compr_stations);
+bool del_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations);
 
-void edit_pipe(std::unordered_map<int, Pipe>& pipes);
+bool edit_pipe(int id, std::unordered_map<int, Pipe>& pipes);
 
-void edit_compr_station(std::unordered_map<int, Compr_station>& compr_stations);
+bool edit_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations);
 
 std::unordered_set<int> get_new_idx(std::unordered_set<int> idx);
 
@@ -95,5 +107,3 @@ void change_eff(double eff, std::unordered_set<int>& idx, std::unordered_map<int
 void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_stations);
 
 void filter_pipes(std::unordered_map<int, Pipe>& pipes);
-
-void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations);
