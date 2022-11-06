@@ -15,7 +15,7 @@ private:
 
 public:
 	void edit();
-	double unused_per();
+	double unused_per() const;
 	void set_eff(double);
 	int get_id() const;
 	void up_id() const;

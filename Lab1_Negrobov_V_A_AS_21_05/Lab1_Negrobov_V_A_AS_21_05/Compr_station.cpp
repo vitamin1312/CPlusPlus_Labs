@@ -15,7 +15,7 @@ void Compr_station::edit(){
 	this->num_run_workshops = get_num_value(0, this->num_workshops + 1);
 }
 
-double Compr_station::unused_per() {
+double Compr_station::unused_per() const {
 	double result = (1.0 - this->num_run_workshops / this->num_workshops) * 100;
 	return result;
 }

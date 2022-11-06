@@ -41,9 +41,9 @@ bool show(std::unordered_map<int, T>& object) {
 
 
 template <typename T>
-bool show(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
-	if (idx.size() != 0) {
-		for (int i : idx) {
+bool show(std::unordered_set<int>& ids, std::unordered_map<int, T>& objects) {
+	if (ids.size() != 0) {
+		for (int i : ids) {
 			std::cout << "Object id: " << i << std::endl;
 			std::cout << objects[i];
 		}
@@ -57,20 +57,42 @@ bool show(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
 
 
 template <typename T>
-void filter_by_name(const std::string& name, std::unordered_map<int, T>& objects, std::unordered_set<int>& idx) {
-	for (auto& obj : objects) {
-		if (obj.second.get_name().find(name) != std::string::npos) {
-			idx.insert(obj.first);
+using pipe_filter = bool (*)(const Pipe& Cs, T params);
+
+
+template <typename T>
+std::unordered_set<int> find_pipes_ids(std::unordered_map<int, Pipe>& pipes, pipe_filter<T> filter, T params) {
+	std::unordered_set<int> ids;
+
+	for (const auto& Pp : pipes) {
+		if (filter(Pp.second, params)) {
+			ids.insert(Pp.first);
 		}
 	}
+	return ids;
 }
 
 
-using Filter = bool (*)();
+template <typename T>
+using compr_st_filter = bool (*)(const Compr_station& Cs, T params);
+
 
 template <typename T>
-void del_objects(std::unordered_set<int>& idx, std::unordered_map<int, T>& objects) {
-	for (int i : idx) {
+std::unordered_set<int> find_compr_st_ids(std::unordered_map<int, Compr_station>& comp_stations, compr_st_filter<T> filter, T params) {
+	std::unordered_set<int> ids;
+
+	for (const auto& Cs : comp_stations) {
+		if (filter(Cs.second, params)) {
+			ids.insert(Cs.first);
+		}
+	}
+	return ids;
+}
+
+
+template <typename T>
+void del_objects(std::unordered_set<int>& ids, std::unordered_map<int, T>& objects) {
+	for (int i : ids) {
 		objects.erase(i);
 	}
 }
@@ -90,20 +112,24 @@ bool edit_pipe(int id, std::unordered_map<int, Pipe>& pipes);
 
 bool edit_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations);
 
-std::unordered_set<int> get_new_idx(std::unordered_set<int> idx);
+std::unordered_set<int> get_new_ids(std::unordered_set<int> ids);
 
-void filter_by_rep(const bool in_rep, std::unordered_map<int, Pipe>& pipes, std::unordered_set<int>& idx);
-
-void change_in_rep(std::unordered_set<int>& idx, std::unordered_map<int, Pipe>& pipes);
+void change_in_rep(std::unordered_set<int>& ids, std::unordered_map<int, Pipe>& pipes);
 
 void choose();
 
 void del_or_edit();
 
-void filter_unused_per(int percent, const bool more, std::unordered_map<int, Compr_station>& compr_stataions, std::unordered_set<int>& idx);
+void change_eff(double eff, std::unordered_set<int>& ids, std::unordered_map<int, Compr_station>& compr_stataions);
 
-void change_eff(double eff, std::unordered_set<int>& idx, std::unordered_map<int, Compr_station>& compr_stataions);
+void filter_pipes(std::unordered_map<int, Pipe>& pipes);
 
 void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_stations);
 
-void filter_pipes(std::unordered_map<int, Pipe>& pipes);
+bool check_pipe_name(const Pipe& Pp, std::string name);
+
+bool check_pipe_in_rep(const Pipe& Pp, bool in_rep);
+
+bool check_compr_st_name(const Compr_station& Cs, std::string name);
+
+bool check_unused_per(const Compr_station& Cs, double percent);
