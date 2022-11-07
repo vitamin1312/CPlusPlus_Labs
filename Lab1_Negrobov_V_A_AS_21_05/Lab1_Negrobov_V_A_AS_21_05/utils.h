@@ -34,7 +34,7 @@ bool show(std::unordered_map<int, T>& object) {
 		return true;
 	}
 	else {
-		std::cout << "There is no objects" << std::endl;
+		std::cout << "There are no objects" << std::endl;
 		return false;
 	}
 }
@@ -50,7 +50,7 @@ bool show(std::unordered_set<int>& ids, std::unordered_map<int, T>& objects) {
 		return true;
 	}
 	else {
-		std::cout << "There is no such objets" << std::endl;
+		std::cout << "There are no such objets" << std::endl;
 		return false;
 	}
 }
@@ -100,7 +100,7 @@ void del_objects(std::unordered_set<int>& ids, std::unordered_map<int, T>& objec
 
 bool pipe_in_rep_input();
 
-void save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations);
+bool save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations);
 
 bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations);
 
@@ -114,11 +114,9 @@ bool edit_compr_station(int id, std::unordered_map<int, Compr_station>& compr_st
 
 std::unordered_set<int> get_new_ids(std::unordered_set<int> ids);
 
-void change_in_rep(std::unordered_set<int>& ids, std::unordered_map<int, Pipe>& pipes);
+int choose();
 
-void choose();
-
-void del_or_edit();
+int del_or_edit();
 
 void change_eff(double eff, std::unordered_set<int>& ids, std::unordered_map<int, Compr_station>& compr_stataions);
 

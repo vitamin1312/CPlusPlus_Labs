@@ -53,22 +53,27 @@ bool edit_compr_station(int id, std::unordered_map<int, Compr_station>& compr_st
 }
 
 
-/////////////////////////////////////////working with data/////////////////////////////////////////
-void save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations) {
-	std::ofstream file(f_name + ".txt");
+/////////////////////////////////////////working with files/////////////////////////////////////////
+bool save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations) {
+	std::ofstream file; 
+	file.open(f_name + ".txt");
+	if (file.is_open()) {
+		file << pipes.size() << ' ' << compr_stations.size() << std::endl;
 
-	file << pipes.size() << ' ' << compr_stations.size() << std::endl;
+		for (const auto& Pp : pipes) {
+			file << Pp.first << std::endl;
+			file << Pp.second;
 
-	for (const auto& Pp : pipes) {
-		file << Pp.first << std::endl;
-		file << Pp.second;
+		}
 
+		for (const auto& Cs : compr_stations) {
+			file << Cs.first << std::endl;
+			file << Cs.second;
+		}
+		file.close();
+		return true;
 	}
-
-	for (const auto& Cs : compr_stations) {
-		file << Cs.first << std::endl;
-		file << Cs.second;
-	}
+	return false;
 }
 
 
@@ -77,7 +82,8 @@ bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 	pipes.clear();
 	compr_stations.clear();
 
-	std::ifstream file_handler(f_name + ".txt");
+	std::ifstream file_handler;
+	file_handler.open(f_name + ".txt");
 	std::string name;
 
 	if (file_handler.is_open()) {
@@ -101,6 +107,7 @@ bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 			Cs.up_id();
 		}
 
+		file_handler.close();
 		return true;
 
 	}
@@ -111,7 +118,7 @@ bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 	}
 }
 
-
+/////////////////////////////////////////working with some objects/////////////////////////////////////////
 std::unordered_set<int> get_new_ids(std::unordered_set<int> ids) {
 	std::unordered_set<int> new_ids;
 	int id;
@@ -148,15 +155,18 @@ void change_eff(double eff, std::unordered_set<int>& ids, std::unordered_map<int
 }
 
 
-void choose() {
+/////////////////////////////////////////choice/////////////////////////////////////////
+int choose() {
 	std::cout << "1.Choose all objects" << std::endl;
 	std::cout << "2.Choose some objects" << std::endl;
+	return get_num_value(1, 3);
 }
 
 
-void del_or_edit() {
+int del_or_edit() {
 	std::cout << "1.Delete objects" << std::endl;
 	std::cout << "2.Edit objects" << std::endl;
+	return get_num_value(1, 3);
 }
 
 
@@ -198,15 +208,14 @@ void filter_pipes(std::unordered_map<int, Pipe>& pipes) {
 		}
 
 		if (choice == 2) {
-			choose();
-			choice = get_num_value(1, 3);
+			
+			choice = choose();
 
 			if (choice == 2) 
 				ids = get_new_ids(ids);
 
-			del_or_edit();
 
-			choice = get_num_value(1, 3);
+			choice = del_or_edit();
 
 			if (choice == 1) del_objects(ids, pipes);
 			if (choice == 2) {
@@ -222,7 +231,7 @@ void filter_pipes(std::unordered_map<int, Pipe>& pipes) {
 
 void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_stations) {
 	std::cout << "1.Filter by name" << std::endl
-		<< "2.Filter by \"percent of unused worcstataoins > \"" << std::endl;
+		<< "2.Filter by \"percent of unused worcstataoins >= \"" << std::endl;
 	int choice = get_num_value(1, 4);
 	std::unordered_set<int> ids;
 
@@ -238,8 +247,8 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 
 	if (choice == 2) {
 
-		double percent = get_num_value(0.0, 100.0);
 		std::cout << "Input percent: ";
+		double percent = get_num_value(0.0, 100.0);
 		ids = find_compr_st_ids(compr_stations, check_unused_per, percent);
 	}
 
@@ -254,20 +263,18 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 		}
 
 		if (choice == 2) {
-			choose();
-			choice = get_num_value(1, 3);
+			
+			choice = choose();
 
 			if (choice == 2)
 				ids = get_new_ids(ids);
 
-			del_or_edit();
-			choice = get_num_value(1, 3);
+			choice = del_or_edit();
 
 			if (choice == 1) del_objects(ids, compr_stations);
 			if (choice == 2) {
-				double eff;
 				std::cout << "Input the efficien of CS: ";
-				std::cin >> eff;
+				double eff = get_num_value(-std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
 				change_eff(eff, ids, compr_stations);
 			}
 		}
@@ -292,5 +299,5 @@ bool check_compr_st_name(const Compr_station& Cs, std::string name) {
 
 
 bool check_unused_per(const Compr_station& Cs, double percent) {
-	return Cs.unused_per() <= percent;
+	return Cs.unused_per() >= percent;
 }

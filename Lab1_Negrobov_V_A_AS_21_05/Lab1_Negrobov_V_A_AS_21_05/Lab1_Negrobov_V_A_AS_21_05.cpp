@@ -43,28 +43,28 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		std::cout << "Goodbye";
 	}
 
-	if (choice == 1) {
+	else if (choice == 1) {
 		Pipe Pp;
 		std::cin >> Pp;
 		pipes[Pp.get_id()] = Pp;
 		Pp.up_id();
 	}
 
-	if (choice == 2) {
+	else if (choice == 2) {
 		Compr_station Cs;
 		std::cin >> Cs;
 		compr_stations[Cs.get_id()] = Cs;
 		Cs.up_id();
 	}
 
-	if (choice == 3) {
+	else if (choice == 3) {
 		std::cout << "Pipes:" << std::endl;
 		show(pipes);
 		std::cout << "Compresor stations:" << std::endl;
 		show(compr_stations);
 	}
 
-	if (choice == 4) {
+	else if (choice == 4) {
 		if (show(pipes)) {
 			int id;
 			std::cout << "Select the pipe id: ";
@@ -74,7 +74,7 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		}
 	}
 
-	if (choice == 5) {
+	else if (choice == 5) {
 		if (show(compr_stations)) {
 			int id;
 			std::cout << "Input the CS id: ";
@@ -84,7 +84,7 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		}
 	}
 
-	if (choice == 6) {
+	else if (choice == 6) {
 
 		if (show(pipes)) {
 			int id;
@@ -96,7 +96,7 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		}
 	}
 
-	if (choice == 7) {
+	else if (choice == 7) {
 		if (show(compr_stations)) {
 			int id;
 			std::cout << "Input CS id: " << std::endl;
@@ -106,25 +106,25 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		}
 	}
 
-	if (choice == 8) {
+	else if (choice == 8) {
 		if (pipes.size() != 0) filter_pipes(pipes);
-		else std::cout << "There is no Pipes" << std::endl;
+		else std::cout << "There are no Pipes" << std::endl;
 	}
 
-	if (choice == 9) {
+	else if (choice == 9) {
 		if (compr_stations.size() != 0)	filter_compr_stations(compr_stations);
-		else std::cout << "There is no CS" << std::endl;
+		else std::cout << "There are no CS" << std::endl;
 	}
 
-	if (choice == 10) {
+	else if (choice == 10) {
 		std::string name;
 		std::cout << "Input name of file for saving: ";
 		std::cin >> name;
-		save_data(name, pipes, compr_stations);
-		std::cout << "Data was saved" << std::endl;
+		if (save_data(name, pipes, compr_stations))	std::cout << "Data was saved" << std::endl;
+		else std::cout << "Data was not saved" << std::endl;
 	}
 
-	if (choice == 11) {
+	else if (choice == 11) {
 		std::string name;
 		std::cout << "Input name of file for loading: ";
 		std::cin >> name;
