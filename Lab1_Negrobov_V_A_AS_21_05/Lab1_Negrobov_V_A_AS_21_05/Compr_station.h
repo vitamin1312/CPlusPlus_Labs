@@ -11,14 +11,14 @@ private:
 	int num_workshops;
 	int num_run_workshops;
 	double efficiency;
-	static int id;
+	static int max_id;
 
 public:
 	void edit();
 	double unused_per() const;
-	void set_eff(double);
-	int get_id() const;
-	void up_id() const;
+	void up_num_run_ws(int num);
+	int get_max_id() const;
+	void up_max_id() const;
 	std::string get_name() const;
 
 

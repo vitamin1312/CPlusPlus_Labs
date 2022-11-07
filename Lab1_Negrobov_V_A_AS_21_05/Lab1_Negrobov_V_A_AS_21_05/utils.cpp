@@ -96,15 +96,15 @@ bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 		for (int i(0); i < num_Pp; ++i) {
 			Pipe Pp;
 			file_handler >> Pp;
-			pipes[Pp.get_id()] = Pp;
-			Pp.up_id();
+			pipes[Pp.get_max_id()] = Pp;
+			Pp.up_max_id();
 		}
 
 		for (int i(0); i < num_Cs; ++i) {
 			Compr_station Cs;
 			file_handler >> Cs;
-			compr_stations[Cs.get_id()] = Cs;
-			Cs.up_id();
+			compr_stations[Cs.get_max_id()] = Cs;
+			Cs.up_max_id();
 		}
 
 		file_handler.close();
@@ -148,9 +148,9 @@ void change_in_rep(bool in_rep, std::unordered_set<int>& ids, std::unordered_map
 }
 
 
-void change_eff(double eff, std::unordered_set<int>& ids, std::unordered_map<int, Compr_station>& compr_stataions) {
+void change_run_ws(int num, std::unordered_set<int>& ids, std::unordered_map<int, Compr_station>& compr_stataions) {
 	for (int i : ids) {
-		compr_stataions[i].set_eff(eff);
+		compr_stataions[i].up_num_run_ws(num);
 	}
 }
 
@@ -231,8 +231,10 @@ void filter_pipes(std::unordered_map<int, Pipe>& pipes) {
 
 void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_stations) {
 	std::cout << "1.Filter by name" << std::endl
-		<< "2.Filter by \"percent of unused worcstataoins >= \"" << std::endl;
-	int choice = get_num_value(1, 4);
+		<< "2.Filter by \"percent of unused worcstataoins >= \"" << std::endl
+		<< "3.Filter by \"percent of unused worcstataoins <= \"" << std::endl
+		<< "4.Filter by \"percent of unused worcstataoins = \"" << std::endl;
+	int choice = get_num_value(1, 5);
 	std::unordered_set<int> ids;
 
 	if (choice == 1) {
@@ -249,7 +251,21 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 
 		std::cout << "Input percent: ";
 		double percent = get_num_value(0.0, 100.0);
-		ids = find_compr_st_ids(compr_stations, check_unused_per, percent);
+		ids = find_compr_st_ids(compr_stations, check_unused_per_m, percent);
+	}
+
+	if (choice == 3) {
+
+		std::cout << "Input percent: ";
+		double percent = get_num_value(0.0, 100.0);
+		ids = find_compr_st_ids(compr_stations, check_unused_per_l, percent);
+	}
+
+	if (choice == 4) {
+
+		std::cout << "Input percent: ";
+		double percent = get_num_value(0.0, 100.0);
+		ids = find_compr_st_ids(compr_stations, check_unused_per_e, percent);
 	}
 
 
@@ -273,9 +289,9 @@ void filter_compr_stations(std::unordered_map<int, Compr_station>& compr_station
 
 			if (choice == 1) del_objects(ids, compr_stations);
 			if (choice == 2) {
-				std::cout << "Input the efficien of CS: ";
-				double eff = get_num_value(-std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
-				change_eff(eff, ids, compr_stations);
+				std::cout << "Input number of workshops to add: ";
+				int num = get_num_value(-std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
+				change_run_ws(num, ids, compr_stations);
 			}
 		}
 	}
@@ -298,6 +314,16 @@ bool check_compr_st_name(const Compr_station& Cs, std::string name) {
 }
 
 
-bool check_unused_per(const Compr_station& Cs, double percent) {
+bool check_unused_per_m(const Compr_station& Cs, double percent) {
 	return Cs.unused_per() >= percent;
+}
+
+
+bool check_unused_per_l(const Compr_station& Cs, double percent) {
+	return Cs.unused_per() <= percent;
+}
+
+
+bool check_unused_per_e(const Compr_station& Cs, double percent) {
+	return Cs.unused_per() == percent;
 }

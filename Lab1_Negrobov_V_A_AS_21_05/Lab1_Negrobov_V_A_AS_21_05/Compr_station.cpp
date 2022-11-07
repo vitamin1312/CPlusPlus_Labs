@@ -2,11 +2,17 @@
 #include "utils.h"
 
 
-int Compr_station::id = 0;
+int Compr_station::max_id = 0;
 
 
-void Compr_station::set_eff(double eff) {
-	this->efficiency = eff;
+void Compr_station::up_num_run_ws(int num) {
+	if (this->num_run_workshops + num > this->num_workshops)
+		this->num_run_workshops = this->num_workshops;
+
+	else if (this->num_run_workshops + num < 0)
+		this->num_run_workshops = 0;
+
+	else this->num_run_workshops = this->num_run_workshops + num;
 }
 
 
@@ -21,12 +27,12 @@ double Compr_station::unused_per() const {
 }
 
 
-int Compr_station::get_id() const {
-	return this->id;
+int Compr_station::get_max_id() const {
+	return max_id;
 }
 
-void Compr_station::up_id() const {
-	this->id++;
+void Compr_station::up_max_id() const {
+	max_id++;
 }
 
 
@@ -55,8 +61,8 @@ std::ostream& operator << (std::ostream& out, const Compr_station& Cs) {
 	std::cout << "----------------------------------------------------------------" << std::endl;
 	std::cout << "Compresor Station" << std::endl;
 	std::cout << "The name of compressor station: " << Cs.name << std::endl;
-	std::cout << "Number of workshops on conpressor station: " << Cs.num_workshops << std::endl;
-	std::cout << "Number of running workshops on conpressor station: " << Cs.num_run_workshops << std::endl;
+	std::cout << "Number of workshops on compressor station: " << Cs.num_workshops << std::endl;
+	std::cout << "Number of running workshops on compressor station: " << Cs.num_run_workshops << std::endl;
 	std::cout << "Efficiency compressor station: " << Cs.efficiency << std::endl;
 	std::cout << "----------------------------------------------------------------" << std::endl << std::endl;
 
@@ -66,7 +72,7 @@ std::ostream& operator << (std::ostream& out, const Compr_station& Cs) {
 
 std::ifstream& operator >> (std::ifstream& fin, Compr_station& Cs) {
 	std::string name;
-	fin >> Cs.id;
+	fin >> Cs.max_id;
 	fin.ignore();
 	if (std::getline(fin, name, '\n')) Cs.name = name;
 	fin >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency;

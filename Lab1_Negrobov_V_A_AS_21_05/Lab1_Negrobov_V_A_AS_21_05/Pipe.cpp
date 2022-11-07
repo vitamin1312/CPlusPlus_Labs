@@ -2,7 +2,7 @@
 #include "utils.h"
 
 
-int Pipe::id = 0;
+int Pipe::max_id = 0;
 
 
 void Pipe::set_in_rep(bool in_rep) {
@@ -15,13 +15,13 @@ void Pipe::edit(){
 }
 
 
-int Pipe::get_id() const {
-	return this->id;
+int Pipe::get_max_id() const {
+	return max_id;
 }
 
 
-void Pipe::up_id() const {
-	this->id++;
+void Pipe::up_max_id() const {
+	max_id++;
 }
 
 
@@ -66,7 +66,7 @@ std::ostream& operator << (std::ostream& out, const Pipe& Pp) {
 
 std::ifstream& operator >> (std::ifstream& fin, Pipe& Pp) {
 	std::string name;
-	fin >> Pp.id;
+	fin >> Pp.max_id;
 	fin.ignore();
 	if (std::getline(fin, name, '\n')) Pp.name = name;
 	fin >> Pp.len >> Pp.diameter >> Pp.in_repairing;
