@@ -28,11 +28,8 @@ double Compr_station::unused_per() const {
 
 
 int Compr_station::get_max_id() const {
-	return max_id;
-}
-
-void Compr_station::up_max_id() const {
 	max_id++;
+	return max_id;
 }
 
 

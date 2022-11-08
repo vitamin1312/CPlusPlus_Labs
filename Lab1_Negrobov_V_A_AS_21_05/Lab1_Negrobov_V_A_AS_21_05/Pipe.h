@@ -17,7 +17,6 @@ public:
 	void edit();
 	void set_in_rep(bool in_rep);
 	int get_max_id() const;
-	void up_max_id() const;
 	bool get_in_rep() const;
 	std::string get_name() const;
 

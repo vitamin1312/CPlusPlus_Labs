@@ -79,14 +79,15 @@ bool save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, c
 
 bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations) {
 
-	pipes.clear();
-	compr_stations.clear();
 
 	std::ifstream file_handler;
 	file_handler.open(f_name + ".txt");
 	std::string name;
 
 	if (file_handler.is_open()) {
+
+		pipes.clear();
+		compr_stations.clear();
 
 		int num_Pp;
 		int num_Cs;
@@ -97,14 +98,12 @@ bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::un
 			Pipe Pp;
 			file_handler >> Pp;
 			pipes[Pp.get_max_id()] = Pp;
-			Pp.up_max_id();
 		}
 
 		for (int i(0); i < num_Cs; ++i) {
 			Compr_station Cs;
 			file_handler >> Cs;
 			compr_stations[Cs.get_max_id()] = Cs;
-			Cs.up_max_id();
 		}
 
 		file_handler.close();

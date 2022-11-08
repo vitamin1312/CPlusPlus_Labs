@@ -16,12 +16,8 @@ void Pipe::edit(){
 
 
 int Pipe::get_max_id() const {
-	return max_id;
-}
-
-
-void Pipe::up_max_id() const {
 	max_id++;
+	return max_id;
 }
 
 

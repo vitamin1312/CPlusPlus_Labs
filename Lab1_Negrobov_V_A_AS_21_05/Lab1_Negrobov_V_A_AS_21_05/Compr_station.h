@@ -18,7 +18,6 @@ public:
 	double unused_per() const;
 	void up_num_run_ws(int num);
 	int get_max_id() const;
-	void up_max_id() const;
 	std::string get_name() const;
 
 

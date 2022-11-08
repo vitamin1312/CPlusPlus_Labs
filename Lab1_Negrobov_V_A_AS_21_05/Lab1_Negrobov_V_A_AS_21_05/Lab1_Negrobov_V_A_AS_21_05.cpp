@@ -47,14 +47,12 @@ void do_command(int choice, std::unordered_map<int, Pipe>& pipes, std::unordered
 		Pipe Pp;
 		std::cin >> Pp;
 		pipes[Pp.get_max_id()] = Pp;
-		Pp.up_max_id();
 	}
 
 	else if (choice == 2) {
 		Compr_station Cs;
 		std::cin >> Cs;
 		compr_stations[Cs.get_max_id()] = Cs;
-		Cs.up_max_id();
 	}
 
 	else if (choice == 3) {
