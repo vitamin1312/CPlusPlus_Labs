@@ -4,6 +4,15 @@
 
 int Pipe::max_id = 0;
 
+int Pipe::get_id() const { return max_id; }
+
+std::string Pipe::get_name() const { return name; }
+
+bool Pipe::get_in_rep() const { return in_repairing; }
+
+double Pipe::get_diam() const { return diameter; }
+
+
 
 void Pipe::set_in_rep(bool in_rep) {
 	this->in_repairing = in_rep;
@@ -18,16 +27,6 @@ void Pipe::edit(){
 int Pipe::get_max_id() const {
 	max_id++;
 	return max_id;
-}
-
-
-std::string Pipe::get_name() const {
-	return this->name;
-}
-
-
-bool Pipe::get_in_rep() const {
-	return this->in_repairing;
 }
 
 

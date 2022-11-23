@@ -5,7 +5,12 @@
 int Compr_station::max_id = 0;
 
 
-void Compr_station::up_num_run_ws(int num) {
+int Compr_station::get_num_workshops() {
+	return num_workshops;
+}
+
+
+void Compr_station::change_num_run_workstation(int num) {
 	if (this->num_run_workshops + num > this->num_workshops)
 		this->num_run_workshops = this->num_workshops;
 
@@ -33,9 +38,14 @@ int Compr_station::get_max_id() const {
 }
 
 
-std::string Compr_station::get_name() const {
-	return this->name;
-}
+int Compr_station::get_id() const {	return max_id; }
+
+
+std::string Compr_station::get_name() const { return this->name; }
+
+int Compr_station::get_pipes_number() { return pipes_number; }
+
+void Compr_station::up_pipes_number() { pipes_number++; }
 
 
 std::istream& operator >> (std::istream& in, Compr_station& Cs) {
@@ -72,7 +82,7 @@ std::ifstream& operator >> (std::ifstream& fin, Compr_station& Cs) {
 	fin >> Cs.max_id;
 	fin.ignore();
 	if (std::getline(fin, name, '\n')) Cs.name = name;
-	fin >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency;
+	fin >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency >> Cs.pipes_number;
 	return fin;
 }
 
@@ -80,6 +90,7 @@ std::ofstream& operator << (std::ofstream& fout, const Compr_station& Cs) {
 	fout << Cs.name << std::endl
 		<< Cs.num_workshops << ' '
 		<< Cs.num_run_workshops << ' '
-		<< Cs.efficiency << std::endl;
+		<< Cs.efficiency << ' '
+		<< Cs.pipes_number << std::endl;
 	return fout;
 }

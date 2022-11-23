@@ -24,6 +24,7 @@
     <ProjectGuid>{fd3e33ef-09be-4434-ac9a-844ec7cad24d}</ProjectGuid>
     <RootNamespace>Lab1NegrobovVAAS2105</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+    <ProjectName>main</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -140,12 +141,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Compr_station.cpp" />
-    <ClCompile Include="Lab1_Negrobov_V_A_AS_21_05.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Network.cpp" />
     <ClCompile Include="Pipe.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Compr_station.h" />
+    <ClInclude Include="Network.h" />
     <ClInclude Include="Pipe.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>

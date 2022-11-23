@@ -7,7 +7,8 @@
 #include <fstream>
 #include "Pipe.h"
 #include "Compr_station.h"
-#include <iostream>
+#include "Network.h"
+
 
 template <typename T>
 T get_num_value(T least, T great) {
@@ -99,14 +100,6 @@ void del_objects(std::unordered_set<int>& ids, std::unordered_map<int, T>& objec
 
 
 bool pipe_in_rep_input();
-
-bool save_data(std::string f_name, const std::unordered_map<int, Pipe>& pipes, const std::unordered_map<int, Compr_station>& compr_stations);
-
-bool read_data(std::string f_name, std::unordered_map<int, Pipe>& pipes, std::unordered_map<int, Compr_station>& compr_stations);
-
-bool del_pipe(int id, std::unordered_map<int, Pipe>& pipes);
-
-bool del_compr_station(int id, std::unordered_map<int, Compr_station>& compr_stations);
 
 bool edit_pipe(int id, std::unordered_map<int, Pipe>& pipes);
 
