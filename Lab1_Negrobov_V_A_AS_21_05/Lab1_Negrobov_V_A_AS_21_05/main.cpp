@@ -58,13 +58,13 @@ void do_command(int choice, Network& network) {
 
 	else if (choice == 4) {
 		std::cout << "Pipes:" << std::endl;
-		show(network.pipes);
+		network.show_pipes();
 		std::cout << "Compresor stations:" << std::endl;
-		show(network.compr_stations);
+		network.show_compr_stations();
 	}
 
 	else if (choice == 5) {
-		if (show(network.pipes)) {
+		if (network.show_pipes()) {
 			int id;
 			std::cout << "Select pipe id: ";
 			id = get_num_value(0, std::numeric_limits<int>::max());
@@ -74,7 +74,7 @@ void do_command(int choice, Network& network) {
 	}
 
 	else if (choice == 6) {
-		if (show(network.compr_stations)) {
+		if (network.show_compr_stations()) {
 			int id;
 			std::cout << "Input CS id: ";
 			id = get_num_value(0, std::numeric_limits<int>::max());
@@ -85,33 +85,34 @@ void do_command(int choice, Network& network) {
 
 	else if (choice == 7) {
 
-		if (show(network.pipes)) {
+		if (network.show_pipes()) {
 			int id;
 			std::cout << "Input pipe id: " << std::endl;
 			id = get_num_value(0, std::numeric_limits<int>::max());;
 
-			if (edit_pipe(id, network.pipes)) std::cout << "Pipe was edited" << std::endl;
+			if (network.edit_pipe(id)) std::cout << "Pipe was edited" << std::endl;
 			else std::cout << "There is no pipe with that id" << std::endl;
 		}
 	}
 
 	else if (choice == 8) {
-		if (show(network.compr_stations)) {
+		if (network.show_compr_stations()) {
 			int id;
 			std::cout << "Input CS id: " << std::endl;
 			id = get_num_value(0, std::numeric_limits<int>::max());
 
-			edit_compr_station(id, network.compr_stations);
+			if (network.edit_compr_station(id)) std::cout << "CS was edited" << std::endl;
+			else std::cout << "There is no CS with that id" << std::endl;
 		}
 	}
 
 	else if (choice == 9) {
-		if (network.pipes.size() != 0) filter_pipes(network.pipes);
+		if (network.get_pipes_size() != 0) network.filter_pipes();
 		else std::cout << "There are no Pipes" << std::endl;
 	}
 
 	else if (choice == 10) {
-		if (network.compr_stations.size() != 0)	filter_compr_stations(network.compr_stations);
+		if (network.get_compr_stations_size() != 0)	network.filter_compr_stations();
 		else std::cout << "There are no CS" << std::endl;
 	}
 
