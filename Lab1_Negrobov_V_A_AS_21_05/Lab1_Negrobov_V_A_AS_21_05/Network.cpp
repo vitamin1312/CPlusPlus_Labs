@@ -3,18 +3,6 @@
 #include <fstream>
 
 
-int Network::input_cs_id() {
-	while (true) {
-		int object_id = get_num_value(1, std::numeric_limits<int>::max());
-		if (this->compr_stations.find(object_id) != this->compr_stations.end()
-			and (compr_stations.at(object_id).get_num_workshops() > compr_stations.at(object_id).get_pipes_number())) {
-			return object_id;
-		}
-		else
-			std::cout << "Please, input correct object id: ";
-	}
-}
-
 
 int Network::input_cs_id(int forbidden_id) {
 	while (true) {
@@ -170,7 +158,7 @@ bool Network::not_node(int id) {
 
 std::istream& operator >> (std::istream& in, edge_ids& edge) {
 	std::cout << "Input id of start cs: ";
-	current_edge.start_cs = input_cs_id();
+	current_edge.start_cs = input_cs_id(-1);
 
 	std::cout << "Input id of start cs: ";
 	current_edge.end_cs = input_cs_id(current_edge.start_cs);
