@@ -11,9 +11,37 @@ bool Network::show_pipes() { return show(pipes); }
 bool Network::show_compr_stations() { return show(compr_stations); }
 
 
+void Network::del_edge(int id) {
+	for (auto edge : edges) {
+		if (edge.second.pipe == id) {
+			compr_stations[edge.second.start_cs].down_pipes_number();
+			compr_stations[edge.second.end_cs].down_pipes_number();
+			edges.erase(edge.first);
+			return;
+		}
+	}
+}
+
+
+void Network::del_pipes(const std::unordered_set<int>& ids) {
+	for (int i : ids) {
+		pipes.erase(i);
+		del_edge(i);
+	}
+}
+
+
+void Network::del_compr_stations(const std::unordered_set<int>& ids) {
+	for (int i : ids) {
+		if (not_node(i))
+			compr_stations.erase(i);
+	}
+}
+
+
 bool Network::not_node(int id) {
-	for (edge_ids edge : edges) {
-		if (id == edge.start_cs or id == edge.end_cs)
+	for (auto edge : edges) {
+		if (id == edge.second.start_cs or id == edge.second.end_cs)
 			return false;
 	}
 	return true;
@@ -21,8 +49,8 @@ bool Network::not_node(int id) {
 
 
 bool Network::not_edge(int id) {
-	for (edge_ids edge : edges) {
-		if (id == edge.pipe)
+	for (auto edge : edges) {
+		if (id == edge.second.pipe)
 			return false;
 	}
 	return true;
@@ -126,7 +154,7 @@ void Network::add_new_edge() {
 		compr_stations[current_edge.start_cs].up_pipes_number();
 		compr_stations[current_edge.end_cs].up_pipes_number();
 
-		edges.push_back(current_edge);
+		edges[current_edge.pipe] = current_edge;
 	}
 	else
 		std::cout << "You have not free Cs" << std::endl;
@@ -154,7 +182,7 @@ bool Network::to_file(std::string f_name) {
 		}
 
 		for (const auto& Ed : edges) {
-			file << Ed;
+			file << Ed.second;
 		}
 
 		file.close();
@@ -192,7 +220,7 @@ bool Network::from_file(std::string f_name) {
 		for (int i(0); i < num_Ed; ++i) {
 			edge_ids edge;
 			file_handler >> edge;
-			edges.push_back(edge);
+			edges[edge.pipe] = edge;
 		}
 
 		file_handler.close();
@@ -203,22 +231,89 @@ bool Network::from_file(std::string f_name) {
 }
 
 
-//std::vector<std::vector<int>> Network::to_adj_matrix() {
+//void Network::top_sort() {
+//
+//	accordance accord;
+//	std::vector<accordance> accordances;
+//
+//	int i = 0;
+//
+//	for (auto cs : compr_stations) {
+//		accord.index = i;
+//		accord.id = cs.first;
+//		accordances.push_back(accord);
+//		i++;
+//	}
 //
 //	int len = compr_stations.size();
 //
 //	std::vector<std::vector<int>> matrix;
 //	matrix.resize(len, std::vector<int>(len, 0));
 //
-//	for (edge_ids edge : edges) {
-//		return;
+//	int start_id, end_id, start_index, end_index;
+//
+//	for (auto edge : edges) {
+//
+//		start_id = edge.second.start_cs;
+//		end_id = edge.second.end_cs;
+//
+//		for (accordance accord : accordances) {
+//			if (accord.id == start_id)
+//				start_index = accord.index;
+//
+//			if (accord.id == end_id)
+//				end_index = accord.index;
+//		}
+//
+//		matrix[start_index][end_index] = 1;
 //	}
+//
+//
+//	//for (int i(0); i < len; ++i) {
+//	//	std::cout << std::endl;
+//	//	for (int j(0); j < len; ++j) {
+//	//		std::cout << matrix[i][j] << ' ';
+//	//	}
+//
+//	//}
 //}
+
+void Network::top_sort() {
+	std::unordered_map<int, std::unordered_set<int>> graph;
+
+	for (auto& [pipe, edges] : edges) {
+		graph[edges.start_cs].insert(edges.end_cs);
+	}
+
+	std::vector<int> graphNumeration;
+	std::unordered_set<int> visited;
+	int N = graph.size();
+
+	std::stack<int> Stack;
+
+	for (auto& [v, neighbours] : graph)
+	{
+		if (visited.find(v) == visited.end())
+			topologicalSortUtil(v, visited, Stack, graph);
+	}
+	int i = 1;
+	while(!Stack.empty())
+    {
+        std::cout << "Number " << i << ": " 
+                  << Stack.top()
+                  << std::endl;
+
+		Stack.pop();
+        i++;
+    }
+
+}
 
 
 bool Network::del_pipe(int id) {
 	if (pipes.find(id) != pipes.end()) {
 		pipes.erase(id);
+		del_edge(id);
 		return true;
 	}
 	else
@@ -229,11 +324,26 @@ bool Network::del_pipe(int id) {
 bool Network::del_compr_station(int id) {
 
 	if (compr_stations.find(id) != compr_stations.end()) {
-		compr_stations.erase(id);
-		return true;
+		if (not_node(id)) {
+			compr_stations.erase(id);
+			return true;
+		}
+		else {
+			std::cout << "This CS is node" << std::endl;
+			return false;
+		}
+			
 	}
-	else
+	else {
+		std::cout << "There is no CS with that id" << std::endl;
 		return false;
+	}
+}
+
+
+std::ostream& operator << (std::ostream & out, edge_ids edge) {
+	std::cout << "CS (id: " << edge.start_cs << ") ----Pipe (id: " << edge.pipe << ")---> CS (id: " << edge.end_cs << ")" << std::endl;
+	return out;
 }
 
 
@@ -274,17 +384,17 @@ void Network::filter_pipes() {
 		std::cin.ignore(10000, '\n');
 		std::getline(std::cin, name);
 
-		ids = find_pipes_ids(check_pipe_name, name);
+		ids = find_pipes_ids(pipes, check_pipe_name, name);
 	}
 
 	if (choice == 2) {
 
-		ids = find_pipes_ids(check_pipe_in_rep, IN_REPEARING);
+		ids = find_pipes_ids(pipes, check_pipe_in_rep, IN_REPEARING);
 	}
 
 	if (choice == 3) {
 
-		ids = find_pipes_ids(check_pipe_in_rep, WORKING);
+		ids = find_pipes_ids(pipes, check_pipe_in_rep, WORKING);
 	}
 
 	if (show(ids, pipes)) {
@@ -306,7 +416,7 @@ void Network::filter_pipes() {
 
 			choice = del_or_edit();
 
-			if (choice == 1) del_objects(ids, pipes);
+			if (choice == 1) del_pipes(ids);
 			if (choice == 2) {
 				bool in_rep;
 				in_rep = pipe_in_rep_input();
@@ -375,7 +485,7 @@ void Network::filter_compr_stations() {
 
 			choice = del_or_edit();
 
-			if (choice == 1) del_objects(ids, compr_stations);
+			if (choice == 1) del_compr_stations(ids);
 			if (choice == 2) {
 				std::cout << "Input number of workshops to add: ";
 				int num = get_num_value(-std::numeric_limits<int>::max(), std::numeric_limits<int>::max());
@@ -428,33 +538,10 @@ std::unordered_set<int> Network::get_new_ids(std::unordered_set<int> ids) {
 	return new_ids;
 }
 
-
-
-bool Network::check_pipe_name(const Pipe& Pp, std::string name) {
-	return Pp.get_name().find(name) != std::string::npos;
-}
-
-
-bool Network::check_pipe_in_rep(const Pipe& Pp, bool in_rep) {
-	return Pp.get_in_rep() == in_rep;
-}
-
-
-bool Network::check_compr_st_name(const Compr_station& Cs, std::string name) {
-	return Cs.get_name().find(name) != std::string::npos;
-}
-
-
-bool Network::check_unused_per_m(const Compr_station& Cs, double percent) {
-	return Cs.unused_per() >= percent;
-}
-
-
-bool Network::check_unused_per_l(const Compr_station& Cs, double percent) {
-	return Cs.unused_per() <= percent;
-}
-
-
-bool Network::check_unused_per_e(const Compr_station& Cs, double percent) {
-	return Cs.unused_per() == percent;
+bool Network::show_edges() {
+	if (edges.size() != 0) {
+		for (auto& edge : edges)
+			std::cout << edge.second;
+		return true;
+	}
 }

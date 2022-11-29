@@ -47,6 +47,8 @@ int Compr_station::get_pipes_number() { return pipes_number; }
 
 void Compr_station::up_pipes_number() { pipes_number++; }
 
+void Compr_station::down_pipes_number() { pipes_number--; }
+
 
 std::istream& operator >> (std::istream& in, Compr_station& Cs) {
 	std::cout << "Input the Name of CS: ";

@@ -24,6 +24,7 @@ public:
 	std::string get_name() const;
 	int get_pipes_number();
 	void up_pipes_number();
+	void down_pipes_number();
 
 
 	friend std::istream& operator >> (std::istream& in, Compr_station& Cs);
