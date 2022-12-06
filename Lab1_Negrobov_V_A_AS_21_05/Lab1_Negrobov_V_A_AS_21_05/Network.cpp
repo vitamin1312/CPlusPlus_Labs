@@ -11,15 +11,27 @@ bool Network::show_pipes() { return show(pipes); }
 bool Network::show_compr_stations() { return show(compr_stations); }
 
 
+//void Network::del_edge(int id) {
+//	for (auto &edge : edges) {
+//		if (edge.second.pipe == id) {
+//			compr_stations[edge.second.start_cs].down_pipes_number();
+//			compr_stations[edge.second.end_cs].down_pipes_number();
+//			edges.erase(edge.first);
+//			return;
+//		}
+//	}
+//}
+
+
+
 void Network::del_edge(int id) {
-	for (auto edge : edges) {
-		if (edge.second.pipe == id) {
-			compr_stations[edge.second.start_cs].down_pipes_number();
-			compr_stations[edge.second.end_cs].down_pipes_number();
-			edges.erase(edge.first);
-			return;
-		}
-	}
+
+	if (edges.find(id) != edges.end()) {
+		current_edge = edges[id];
+		compr_stations[current_edge.start_cs].down_pipes_number();
+		compr_stations[current_edge.end_cs].down_pipes_number();
+		edges.erase(id);
+	}		
 }
 
 
@@ -231,82 +243,37 @@ bool Network::from_file(std::string f_name) {
 }
 
 
-//void Network::top_sort() {
-//
-//	accordance accord;
-//	std::vector<accordance> accordances;
-//
-//	int i = 0;
-//
-//	for (auto cs : compr_stations) {
-//		accord.index = i;
-//		accord.id = cs.first;
-//		accordances.push_back(accord);
-//		i++;
-//	}
-//
-//	int len = compr_stations.size();
-//
-//	std::vector<std::vector<int>> matrix;
-//	matrix.resize(len, std::vector<int>(len, 0));
-//
-//	int start_id, end_id, start_index, end_index;
-//
-//	for (auto edge : edges) {
-//
-//		start_id = edge.second.start_cs;
-//		end_id = edge.second.end_cs;
-//
-//		for (accordance accord : accordances) {
-//			if (accord.id == start_id)
-//				start_index = accord.index;
-//
-//			if (accord.id == end_id)
-//				end_index = accord.index;
-//		}
-//
-//		matrix[start_index][end_index] = 1;
-//	}
-//
-//
-//	//for (int i(0); i < len; ++i) {
-//	//	std::cout << std::endl;
-//	//	for (int j(0); j < len; ++j) {
-//	//		std::cout << matrix[i][j] << ' ';
-//	//	}
-//
-//	//}
-//}
-
 void Network::top_sort() {
-	std::unordered_map<int, std::unordered_set<int>> graph;
-
-	for (auto& [pipe, edges] : edges) {
-		graph[edges.start_cs].insert(edges.end_cs);
+	if (edges.empty()) {
+		std::cout << "There is no graph";
 	}
+	else {
+		std::unordered_map<int, std::unordered_set<int>> graph;
+		std::stack<int> topo;
 
-	std::vector<int> graphNumeration;
-	std::unordered_set<int> visited;
-	int N = graph.size();
+		for (auto& [pipe, edges] : edges) {
+			graph[edges.start_cs].insert(edges.end_cs);
+		}
 
-	std::stack<int> Stack;
+		topo = topoligical_sort(graph);
 
-	for (auto& [v, neighbours] : graph)
-	{
-		if (visited.find(v) == visited.end())
-			topologicalSortUtil(v, visited, Stack, graph);
+		int i = 1;
+
+		if (topo.empty())
+			std::cout << "There is a cycle in graph" << std::endl;
+
+		else {
+			while (!topo.empty())
+			{
+				std::cout << "Number " << i << ": "
+					<< topo.top()
+					<< std::endl;
+
+				topo.pop();
+				i++;
+			}
+		}
 	}
-	int i = 1;
-	while(!Stack.empty())
-    {
-        std::cout << "Number " << i << ": " 
-                  << Stack.top()
-                  << std::endl;
-
-		Stack.pop();
-        i++;
-    }
-
 }
 
 
@@ -544,4 +511,7 @@ bool Network::show_edges() {
 			std::cout << edge.second;
 		return true;
 	}
+	return false;
 }
+
+

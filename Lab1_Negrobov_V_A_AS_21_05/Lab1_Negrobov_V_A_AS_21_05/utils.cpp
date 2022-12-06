@@ -3,19 +3,55 @@
 #include <list>
 #include <stack>
 
-void topologicalSortUtil(int v, std::unordered_set<int>& visited,
+
+std::stack<int> topoligical_sort(std::unordered_map<int, std::unordered_set<int>>& graph) 
+{
+	std::unordered_set<int> visited;
+	std::stack<int> Stack;
+	std::unordered_set<int> gray;
+
+	for (auto& [v, neighbours] : graph)	{
+		if (visited.find(v) == visited.end()) {
+			gray.clear();
+			topological_sort_util(v, visited, Stack, graph, gray);
+
+			if (Stack.empty())
+				return Stack;
+		}
+			
+	}
+
+	return Stack;
+	
+}
+
+void topological_sort_util(int v, std::unordered_set<int>& visited,
 						 std::stack<int>& Stack, 
-						 std::unordered_map<int, std::unordered_set<int>>& graph)
+						 std::unordered_map<int, std::unordered_set<int>>& graph,
+	                     std::unordered_set<int> gray)
 {
 	visited.insert(v);
-	for (auto& adj : graph[v])
+	gray.insert(v);
+
+
+	for (const int &adj : graph[v])
 	{
 		if (visited.find(adj) == visited.end())
-			topologicalSortUtil(adj, visited, Stack, graph);
+			topological_sort_util(adj, visited, Stack, graph, gray);
+
+		if (Stack.empty())
+			return;
+
+		if (gray.contains(adj)) {
+			while (!Stack.empty())
+				Stack.pop();
+			return;
+		}
 	}
 
 	Stack.push(v);
 }
+
 
 bool pipe_in_rep_input() {
 	std::cout << "1.Pipe is in repearing 2.Pipe is working" << std::endl;

@@ -24,38 +24,38 @@ T get_num_value(T least, T great) {
 }
 
 
-template <typename T>
-using pipe_filter = bool (*)(const Pipe& Cs, T params);
-
-
-template <typename T>
-std::unordered_set<int> find_pipes_ids(std::unordered_map<int, Pipe>& pipes,pipe_filter<T> filter, T params) {
-	std::unordered_set<int> ids;
-
-	for (const auto& Pp : pipes) {
-		if (filter(Pp.second, params)) {
-			ids.insert(Pp.first);
-		}
-	}
-	return ids;
-}
-
-
-template <typename T>
-using compr_st_filter = bool (*)(const Compr_station& Cs, T params);
-
-
-template <typename T>
-std::unordered_set<int> find_compr_st_ids(std::unordered_map<int, Compr_station>& compr_stations, compr_st_filter<T> filter, T params) {
-	std::unordered_set<int> ids;
-
-	for (const auto& Cs : compr_stations) {
-		if (filter(Cs.second, params)) {
-			ids.insert(Cs.first);
-		}
-	}
-	return ids;
-}
+//template <typename T>
+//using pipe_filter = bool (*)(const Pipe& Cs, T params);
+//
+//
+//template <typename T>
+//std::unordered_set<int> find_pipes_ids(std::unordered_map<int, Pipe>& pipes,pipe_filter<T> filter, T params) {
+//	std::unordered_set<int> ids;
+//
+//	for (const auto& Pp : pipes) {
+//		if (filter(Pp.second, params)) {
+//			ids.insert(Pp.first);
+//		}
+//	}
+//	return ids;
+//}
+//
+//
+//template <typename T>
+//using compr_st_filter = bool (*)(const Compr_station& Cs, T params);
+//
+//
+//template <typename T>
+//std::unordered_set<int> find_compr_st_ids(std::unordered_map<int, Compr_station>& compr_stations, compr_st_filter<T> filter, T params) {
+//	std::unordered_set<int> ids;
+//
+//	for (const auto& Cs : compr_stations) {
+//		if (filter(Cs.second, params)) {
+//			ids.insert(Cs.first);
+//		}
+//	}
+//	return ids;
+//}
 
 
 bool pipe_in_rep_input();
@@ -72,4 +72,9 @@ bool check_unused_per_l(const Compr_station& Cs, double percent);
 
 bool check_unused_per_e(const Compr_station& Cs, double percent);
 
-void topologicalSortUtil(int v, std::unordered_set<int>& visited, std::stack<int>& Stack, std::unordered_map<int, std::unordered_set<int>>& graph);
+void topological_sort_util(int v, std::unordered_set<int>& visited,
+	std::stack<int>& Stack,
+	std::unordered_map<int, std::unordered_set<int>>& graph,
+	std::unordered_set<int> gray);
+
+std::stack<int> topoligical_sort(std::unordered_map<int, std::unordered_set<int>>& graph);

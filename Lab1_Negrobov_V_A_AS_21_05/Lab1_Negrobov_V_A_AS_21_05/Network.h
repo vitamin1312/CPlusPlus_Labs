@@ -22,12 +22,6 @@ std::ifstream& operator >> (std::ifstream& fin, edge_ids& edge);
 std::ofstream& operator << (std::ofstream& fout, const edge_ids& edge);
 
 
-struct accordance {
-	int index;
-	int id;
-};
-
-
 class Network
 {
 private:
@@ -93,6 +87,39 @@ private:
 			std::cout << "There are no such objets" << std::endl;
 			return false;
 		}
+	}
+
+	template <typename T>
+	using pipe_filter = bool (*)(const Pipe& Cs, T params);
+
+
+	template <typename T>
+	std::unordered_set<int> find_pipes_ids(std::unordered_map<int, Pipe>& pipes, pipe_filter<T> filter, T params) {
+		std::unordered_set<int> ids;
+
+		for (const auto& Pp : pipes) {
+			if (filter(Pp.second, params)) {
+				ids.insert(Pp.first);
+			}
+		}
+		return ids;
+	}
+
+
+	template <typename T>
+	using compr_st_filter = bool (*)(const Compr_station& Cs, T params);
+
+
+	template <typename T>
+	std::unordered_set<int> find_compr_st_ids(std::unordered_map<int, Compr_station>& compr_stations, compr_st_filter<T> filter, T params) {
+		std::unordered_set<int> ids;
+
+		for (const auto& Cs : compr_stations) {
+			if (filter(Cs.second, params)) {
+				ids.insert(Cs.first);
+			}
+		}
+		return ids;
 	}
 
 
