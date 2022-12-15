@@ -11,18 +11,6 @@ bool Network::show_pipes() { return show(pipes); }
 bool Network::show_compr_stations() { return show(compr_stations); }
 
 
-//void Network::del_edge(int id) {
-//	for (auto &edge : edges) {
-//		if (edge.second.pipe == id) {
-//			compr_stations[edge.second.start_cs].down_pipes_number();
-//			compr_stations[edge.second.end_cs].down_pipes_number();
-//			edges.erase(edge.first);
-//			return;
-//		}
-//	}
-//}
-
-
 
 void Network::del_edge(int id) {
 
@@ -141,7 +129,7 @@ void Network::add_new_edge() {
 		std::cout << "Input id of start cs: ";
 		current_edge.start_cs = input_cs_id(-1);
 
-		std::cout << "Input id of start cs: ";
+		std::cout << "Input id of end cs: ";
 		current_edge.end_cs = input_cs_id(current_edge.start_cs);
 
 		std::cout << "Input diameter of Pipe for connecting: ";
@@ -243,6 +231,66 @@ bool Network::from_file(std::string f_name) {
 }
 
 
+void Network::get_max_flow() {
+	std::unordered_map<int, int> id_idx;
+	std::unordered_map<int, int> idx_id;
+	std::unordered_set<int> spt_compr_stations;
+
+	std::vector<std::vector<double>> graph(compr_stations.size(), std::vector<double>(compr_stations.size(), 0.0));
+
+	int idx = 0;
+
+	for (auto& [Pp_id, edge] : edges) {
+		if (!spt_compr_stations.contains(edge.start_cs)) {
+			id_idx[edge.start_cs] = idx;
+			idx_id[idx] = edge.start_cs;
+			spt_compr_stations.insert(edge.start_cs);
+
+			idx++;
+		}
+
+		if (!spt_compr_stations.contains(edge.end_cs)) {
+			id_idx[edge.end_cs] = idx;
+			idx_id[idx] = edge.end_cs;
+			spt_compr_stations.insert(edge.end_cs);
+
+			idx++;
+		}
+	}
+
+	for (auto& [Pp_id, edge] : edges) {
+		if (pipes[Pp_id].get_in_rep() != true)
+			graph[id_idx[edge.start_cs]][id_idx[edge.end_cs]] = pipes[Pp_id].get_diam();
+	}
+
+	int start, finish;
+
+	while (true) {
+		std::cout << "Input start node: ";
+		start = get_num_value(1, std::numeric_limits<int>::max());
+		if (id_idx.contains(start)) {
+			start = id_idx[start];
+			break;
+		}
+		std::cout << "There is no this node in graph" << std::endl;
+	}
+
+	while (true) {
+		std::cout << "Input start node: ";
+		finish = get_num_value(1, std::numeric_limits<int>::max());
+		if (id_idx.contains(finish)) {
+			finish = id_idx[finish];
+			break;
+		}
+		std::cout << "There is no this node in graph" << std::endl;
+	}
+
+	std::cout << "Max flow form " << idx_id[start] << " to " << idx_id[finish] << " is "
+		<< ford_fulkerson(graph, start, finish) << std::endl;
+
+}
+
+
 void Network::top_sort() {
 	if (edges.empty()) {
 		std::cout << "There is no graph";
@@ -273,6 +321,63 @@ void Network::top_sort() {
 				i++;
 			}
 		}
+	}
+}
+
+
+void Network::shortest_path() {
+
+	std::unordered_map<int, int> id_idx;
+	std::unordered_map<int, int> idx_id;
+	std::unordered_set<int> spt_compr_stations;
+
+	std::vector<std::vector<double>> graph(compr_stations.size(), std::vector<double>(compr_stations.size(), 0.0));
+
+	int idx = 0;
+
+	for (auto& [Pp_id, edge] : edges) {
+		if (!spt_compr_stations.contains(edge.start_cs)) {
+			id_idx[edge.start_cs] = idx;
+			idx_id[idx] = edge.start_cs;
+			spt_compr_stations.insert(edge.start_cs);
+
+			idx++;
+		}
+
+		if (!spt_compr_stations.contains(edge.end_cs)) {
+			id_idx[edge.end_cs] = idx;
+			idx_id[idx] = edge.end_cs;
+			spt_compr_stations.insert(edge.end_cs);
+
+			idx++;
+		}
+	}
+
+	for (auto& [Pp_id, edge] : edges) {
+		if (pipes[Pp_id].get_in_rep() != true)
+			graph[id_idx[edge.start_cs]][id_idx[edge.end_cs]] = pipes[Pp_id].get_len();
+	}
+
+	int src;
+
+	while (true) {
+		std::cout << "Input start node: ";
+		src = get_num_value(1, std::numeric_limits<int>::max());
+		if (id_idx.contains(src)) {
+			src = id_idx[src];
+			break;
+		}
+		std::cout << "There is no this node in graph" << std::endl;
+	}
+
+	std::vector<double> dist = dijkstra(graph, src);
+
+	for (int i(0); i < dist.size(); ++i) {
+		std::cout << "Distance to node " << idx_id[i];
+		if (dist[i] == std::numeric_limits<double>::max())
+			 std::cout << " is Inf" << std::endl;
+		else
+			std::cout << " is " << dist[i] << std::endl;
 	}
 }
 

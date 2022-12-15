@@ -23,40 +23,9 @@ T get_num_value(T least, T great) {
 	}
 }
 
+bool bfs(const std::vector<std::vector<double>>& r_graph, int s, int t, std::vector<int>& parent);
 
-//template <typename T>
-//using pipe_filter = bool (*)(const Pipe& Cs, T params);
-//
-//
-//template <typename T>
-//std::unordered_set<int> find_pipes_ids(std::unordered_map<int, Pipe>& pipes,pipe_filter<T> filter, T params) {
-//	std::unordered_set<int> ids;
-//
-//	for (const auto& Pp : pipes) {
-//		if (filter(Pp.second, params)) {
-//			ids.insert(Pp.first);
-//		}
-//	}
-//	return ids;
-//}
-//
-//
-//template <typename T>
-//using compr_st_filter = bool (*)(const Compr_station& Cs, T params);
-//
-//
-//template <typename T>
-//std::unordered_set<int> find_compr_st_ids(std::unordered_map<int, Compr_station>& compr_stations, compr_st_filter<T> filter, T params) {
-//	std::unordered_set<int> ids;
-//
-//	for (const auto& Cs : compr_stations) {
-//		if (filter(Cs.second, params)) {
-//			ids.insert(Cs.first);
-//		}
-//	}
-//	return ids;
-//}
-
+double ford_fulkerson(std::vector<std::vector<double>>& graph, int s, int t);
 
 bool pipe_in_rep_input();
 
@@ -78,3 +47,11 @@ void topological_sort_util(int v, std::unordered_set<int>& visited,
 	std::unordered_set<int> gray);
 
 std::stack<int> topoligical_sort(std::unordered_map<int, std::unordered_set<int>>& graph);
+
+std::vector<double> dijkstra(std::vector<std::vector<double>> graph, int src);
+
+int min_dist_node(const std::unordered_set<int>& spt_set, const std::vector<double>& dist);
+
+double ford_fulkerson(std::vector<std::vector<std::vector<double>>> graph, int start, int end);
+
+int get_max_vertex(int k, std::vector<std::vector<std::vector<double>>>& graph, std::unordered_set<int>& visited);

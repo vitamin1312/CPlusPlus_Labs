@@ -12,14 +12,17 @@ private:
 	double diameter;
 	bool in_repairing;
 	static int max_id;
+	int id;
 
 public:
 	void edit();
 	void set_in_rep(bool in_rep);
 	int get_id() const;
+	int get_current_id() const;
 	int get_max_id() const;
 	bool get_in_rep() const;
 	double get_diam() const;
+	double get_len() const;
 	std::string get_name() const;
 
 

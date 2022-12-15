@@ -13,6 +13,7 @@ void do_command(int choice, Network& network);
 int main()
 {
 	Network network;
+	network.from_file("data");
 	int choice;
 
 	while (true) {
@@ -27,11 +28,13 @@ int main()
 				  << "9.Filter pipes" << std::endl
 				  << "10.Filter CS" << std::endl
 			      << "11.Topological sort network" << std::endl
-				  << "12.Save" << std::endl
-				  << "13.Load" << std::endl
+			      << "12.Shortest paths" << std::endl
+			      << "13.Max flow" << std::endl
+				  << "14.Save" << std::endl
+				  << "15.Load" << std::endl
 				  << "0.Exit" << std::endl;
 
-		choice = get_num_value(0, 14);
+		choice = get_num_value(0, 16);
 		do_command(choice, network);
 		if (choice == 0) break;
 	}
@@ -123,8 +126,15 @@ void do_command(int choice, Network& network) {
 		network.top_sort();
 	}
 
-
 	else if (choice == 12) {
+		network.shortest_path();
+	}
+
+	else if (choice == 13) {
+		network.get_max_flow();
+	}
+
+	else if (choice == 14) {
 		std::string name;
 		std::cout << "Input name of file for saving: ";
 		std::cin >> name;
@@ -132,7 +142,7 @@ void do_command(int choice, Network& network) {
 		else std::cout << "Data was not saved" << std::endl;
 	}
 
-	else if (choice == 13) {
+	else if (choice == 15) {
 		std::string name;
 		std::cout << "Input name of file for loading: ";
 		std::cin >> name;

@@ -38,8 +38,9 @@ int Compr_station::get_max_id() const {
 }
 
 
-int Compr_station::get_id() const {	return max_id; }
+int Compr_station::get_id() const {	return id; }
 
+int Compr_station::get_current_id() const {	return max_id; }
 
 std::string Compr_station::get_name() const { return this->name; }
 
@@ -62,6 +63,8 @@ std::istream& operator >> (std::istream& in, Compr_station& Cs) {
 	Cs.num_run_workshops = get_num_value(0, Cs.num_workshops + 1);
 	std::cout << "Input the efficiency of CS: ";
 	Cs.efficiency = get_num_value(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+
+	Cs.id = Cs.max_id + 1;
 	return in;
 }
 
@@ -81,7 +84,8 @@ std::ostream& operator << (std::ostream& out, const Compr_station& Cs) {
 
 std::ifstream& operator >> (std::ifstream& fin, Compr_station& Cs) {
 	std::string name;
-	fin >> Cs.max_id;
+	fin >> Cs.id;
+	Cs.max_id = std::max(Cs.id, Cs.max_id);
 	fin.ignore();
 	if (std::getline(fin, name, '\n')) Cs.name = name;
 	fin >> Cs.num_workshops >> Cs.num_run_workshops >> Cs.efficiency >> Cs.pipes_number;

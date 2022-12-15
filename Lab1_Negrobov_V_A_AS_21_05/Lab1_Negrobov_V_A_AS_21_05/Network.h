@@ -158,4 +158,8 @@ public:
 	bool from_file(std::string f_name);
 	
 	void top_sort();
+
+	void shortest_path();
+
+	void get_max_flow();
 };

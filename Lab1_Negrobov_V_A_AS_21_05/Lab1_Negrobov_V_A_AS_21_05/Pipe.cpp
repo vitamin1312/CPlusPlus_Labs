@@ -4,7 +4,9 @@
 
 int Pipe::max_id = 0;
 
-int Pipe::get_id() const { return max_id; }
+int Pipe::get_id() const { return id; }
+
+int Pipe::get_current_id() const { return max_id; }
 
 std::string Pipe::get_name() const { return name; }
 
@@ -12,6 +14,7 @@ bool Pipe::get_in_rep() const { return in_repairing; }
 
 double Pipe::get_diam() const { return diameter; }
 
+double Pipe::get_len() const { return len; }
 
 
 void Pipe::set_in_rep(bool in_rep) {
@@ -39,6 +42,8 @@ std::istream& operator >> (std::istream& in, Pipe& Pp) {
 	std::cout << "Input the diameter of Pipe: ";
 	Pp.diameter = get_num_value(0.0, std::numeric_limits<double>::max());
 	Pp.in_repairing = pipe_in_rep_input();
+
+	Pp.id = Pp.max_id + 1;
 	return in;
 }
 
@@ -61,7 +66,8 @@ std::ostream& operator << (std::ostream& out, const Pipe& Pp) {
 
 std::ifstream& operator >> (std::ifstream& fin, Pipe& Pp) {
 	std::string name;
-	fin >> Pp.max_id;
+	fin >> Pp.id;
+	Pp.max_id = std::max(Pp.id, Pp.max_id);
 	fin.ignore();
 	if (std::getline(fin, name, '\n')) Pp.name = name;
 	fin >> Pp.len >> Pp.diameter >> Pp.in_repairing;
